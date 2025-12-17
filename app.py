@@ -4,9 +4,11 @@ import os
 import openai
 import cohere
 
+# Create Flask app
 app = Flask(__name__)
 CORS(app)
 
+# Load API keys from environment variables
 openai.api_key = os.getenv("OPENAI_API_KEY")
 co = cohere.Client(os.getenv("COHERE_API_KEY"))
 
@@ -25,12 +27,17 @@ def ask():
 
     try:
         if premium:
+            # Premium users → OpenAI
             response = openai.ChatCompletion.create(
                 model="gpt-4o-mini",
-                messages=[{"role": "user", "content": question}]
+                messages=[
+                    {"role": "system", "content": "You are Mentis, a helpful AI tutor."},
+                    {"role": "user", "content": question}
+                ]
             )
             answer = response.choices[0].message.content
         else:
+            # Free users → Cohere
             response = co.generate(
                 model="command",
                 prompt=question,
@@ -44,6 +51,7 @@ def ask():
         return jsonify({"error": str(e)}), 500
 
 
+# REQUIRED FOR RENDER
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
