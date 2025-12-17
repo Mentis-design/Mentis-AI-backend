@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import os
 import openai
 import cohere
 
 app = Flask(__name__)
+CORS(app)
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 co = cohere.Client(os.getenv("COHERE_API_KEY"))
@@ -14,25 +16,34 @@ def home():
 
 @app.route("/ask", methods=["POST"])
 def ask():
-    data = request.json
+    data = request.json or {}
     question = data.get("question", "")
     premium = data.get("premium", False)
 
-    if premium:
-        response = openai.ChatCompletion.create(
-            model="gpt-4o-mini",
-            messages=[{"role": "user", "content": question}]
-        )
-        answer = response.choices[0].message.content
-    else:
-        response = co.generate(
-            model="command",
-            prompt=question,
-            max_tokens=200
-        )
-        answer = response.generations[0].text
+    if not question:
+        return jsonify({"error": "No question provided"}), 400
 
-    return jsonify({"answer": answer})
+    try:
+        if premium:
+            response = openai.ChatCompletion.create(
+                model="gpt-4o-mini",
+                messages=[{"role": "user", "content": question}]
+            )
+            answer = response.choices[0].message.content
+        else:
+            response = co.generate(
+                model="command",
+                prompt=question,
+                max_tokens=200
+            )
+            answer = response.generations[0].text
+
+        return jsonify({"answer": answer})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 if __name__ == "__main__":
-    app.run()
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
