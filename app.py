@@ -1,17 +1,13 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS
 import os
+import openai
 import cohere
-from openai import OpenAI
 
 app = Flask(__name__)
-CORS(app)
 
-COHERE_API_KEY = os.getenv("COHERE_API_KEY")
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
-co = cohere.Client(COHERE_API_KEY)
-openai_client = OpenAI(api_key=OPENAI_API_KEY)
+# API keys from environment variables
+openai.api_key = os.getenv("OPENAI_API_KEY")
+co = cohere.Client(os.getenv("COHERE_API_KEY"))
 
 @app.route("/")
 def home():
@@ -23,28 +19,34 @@ def ask():
     question = data.get("question", "")
     premium = data.get("premium", False)
 
-    if not question:
-        return jsonify({"error": "No question provided"}), 400
+    # Prompt instructs AI to respond in structured Markdown
+    markdown_prompt = f"""
+You are Mentis, a smart AI tutor. Answer the question in **clear, structured Markdown**:
+- Use headings (###) for main sections
+- Use bullets (-) or numbered lists if needed
+- Include formulas in LaTeX format if applicable
+- Provide concise but informative explanations
+Question: {question}
+"""
 
-    try:
-        if premium:
-            response = openai_client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[{"role": "user", "content": question}]
-            )
-            answer = response.choices[0].message.content
-        else:
-            response = co.chat(
-                model="command-xlarge-nightly",  # <-- updated
-                message=question
-            )
-            answer = response.text
+    if premium:
+        # OpenAI GPT for premium users
+        response = openai.ChatCompletion.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": markdown_prompt}]
+        )
+        answer = response.choices[0].message.content
+    else:
+        # Cohere Chat for free users (Chat API)
+        response = co.chat(
+            model="command-light",
+            query=markdown_prompt
+        )
+        answer = response.message
 
-        return jsonify({"answer": answer})
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    return jsonify({"answer": answer})
 
 if __name__ == "__main__":
+    # Use 0.0.0.0 for Render, port from environment or default 10000
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
