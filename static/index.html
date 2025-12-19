@@ -5,6 +5,7 @@
   <title>Mentis AI</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- Markdown-it -->
   <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
 
   <style>
@@ -24,6 +25,7 @@
       padding: 10px 16px;
       font-size: 16px;
       margin-top: 10px;
+      cursor: pointer;
     }
     .answer {
       margin-top: 20px;
@@ -33,7 +35,6 @@
     }
   </style>
 </head>
-
 <body>
   <h1>Mentis AI Tutor</h1>
 
@@ -51,24 +52,28 @@
     const md = window.markdownit();
 
     async function ask() {
-      const q = document.getElementById("question").value;
+      const question = document.getElementById("question").value.trim();
       const premium = document.getElementById("premium").checked;
 
-      document.getElementById("output").innerText = "Thinking...";
+      if (!question) {
+        alert("Please type a question.");
+        return;
+      }
+
+      const output = document.getElementById("output");
+      output.innerText = "Thinking...";
 
       try {
         const res = await fetch("/ask", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ question: q, premium })
+          body: JSON.stringify({ question, premium })
         });
 
         const data = await res.json();
-        document.getElementById("output").innerHTML =
-          `<div class="answer">${md.render(data.answer)}</div>`;
-      } catch (e) {
-        document.getElementById("output").innerText =
-          "Network error: " + e;
+        output.innerHTML = `<div class="answer">${md.render(data.answer)}</div>`;
+      } catch (err) {
+        output.innerText = "Network error: " + err;
       }
     }
   </script>
