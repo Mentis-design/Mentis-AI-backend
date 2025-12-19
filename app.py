@@ -1,19 +1,19 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-import os
-import openai
 import cohere
+import os
 
-app = Flask(__name__, static_folder="static")
+app = Flask(__name__, static_folder="static", static_url_path="")
 CORS(app)
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
-co = cohere.Client(os.getenv("COHERE_API_KEY"))
+co = cohere.Client(os.environ.get("COHERE_API_KEY"))
 
+# Serve frontend
 @app.route("/")
-def home():
-    return app.send_static_file("index.html")
+def index():
+    return send_from_directory("static", "index.html")
 
+# Chat endpoint
 @app.route("/ask", methods=["POST"])
 def ask():
     data = request.json
@@ -24,23 +24,17 @@ def ask():
         return jsonify({"answer": "Please ask a question."})
 
     try:
-        if premium:
-            response = openai.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[{"role": "user", "content": question}]
-            )
-            answer = response.choices[0].message.content
-        else:
-            response = co.chat(
-                model="command-r",
-                message=question
-            )
-            answer = response.text
+        response = co.chat(
+            model="command-r",
+            message=question,
+            temperature=0.3 if not premium else 0.6
+        )
 
-        return jsonify({"answer": answer})
+        return jsonify({"answer": response.text})
 
     except Exception as e:
-        return jsonify({"answer": f"Error: {str(e)}"})
+        return jsonify({"answer": f"Error: {str(e)}"}), 500
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
