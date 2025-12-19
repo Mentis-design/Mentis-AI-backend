@@ -6,33 +6,30 @@ import os
 app = Flask(__name__, static_folder="static")
 CORS(app)
 
-# Initialize Cohere client with your API key stored as environment variable
 co = cohere.Client(os.environ.get("COHERE_API_KEY"))
 
 @app.route("/")
 def home():
-    # Serve the index.html from the static folder
     return send_from_directory("static", "index.html")
 
 @app.route("/ask", methods=["POST"])
 def ask():
-    data = request.json
-    question = data.get("question", "")
-    premium = data.get("premium", False)  # can be used later for different models
+    try:
+        data = request.get_json(force=True)
+        question = data.get("question", "").strip()
 
-    if not question:
-        return jsonify({"answer": "Please ask a question."})
+        if not question:
+            return jsonify({"answer": "Please ask a question."})
 
-    # Cohere Chat API
-    response = co.chat(
-        message=question,
-        model="command"  # Use a supported model from Cohere
-    )
+        response = co.chat(
+            model="command",
+            message=question
+        )
 
-    return jsonify({
-        "answer": response.text
-    })
+        return jsonify({"answer": response.text})
+
+    except Exception as e:
+        return jsonify({"answer": f"Server error: {str(e)}"}), 500
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # Render provides PORT automatically
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=10000)
