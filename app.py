@@ -1,15 +1,18 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
-import openai
 import cohere
+from openai import OpenAI
 
 app = Flask(__name__)
-CORS(app)  # <-- Fixes Network error: Failed to fetch
+CORS(app)
 
-# Load API keys from environment variables
-openai.api_key = os.getenv("OPENAI_API_KEY")
-co = cohere.Client(os.getenv("COHERE_API_KEY"))
+# API keys from environment variables
+COHERE_API_KEY = os.getenv("COHERE_API_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+co = cohere.Client(COHERE_API_KEY)
+openai_client = OpenAI(api_key=OPENAI_API_KEY)
 
 @app.route("/")
 def home():
@@ -17,30 +20,31 @@ def home():
 
 @app.route("/ask", methods=["POST"])
 def ask():
+    data = request.json
+    question = data.get("question", "").strip()
+    premium = data.get("premium", False)
+
+    if not question:
+        return jsonify({"error": "No question provided"}), 400
+
     try:
-        data = request.json
-        question = data.get("question", "").strip()
-        premium = data.get("premium", False)
-
-        if not question:
-            return jsonify({"error": "No question provided"}), 400
-
-        # Premium users → OpenAI GPT
+        # PREMIUM USERS → OpenAI
         if premium:
-            response = openai.ChatCompletion.create(
+            response = openai_client.chat.completions.create(
                 model="gpt-4o-mini",
-                messages=[{"role": "user", "content": question}]
+                messages=[
+                    {"role": "user", "content": question}
+                ]
             )
             answer = response.choices[0].message.content
 
-        # Free users → Cohere Chat API
+        # FREE USERS → COHERE CHAT
         else:
             response = co.chat(
-                model="command",
-                messages=[{"role": "user", "content": question}],
-                max_tokens=200
+                model="command-r-plus",
+                message=question
             )
-            answer = response.output_text
+            answer = response.text
 
         return jsonify({"answer": answer})
 
@@ -49,6 +53,5 @@ def ask():
 
 
 if __name__ == "__main__":
-    # Render provides the port in environment variable
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
