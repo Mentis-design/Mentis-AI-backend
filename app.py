@@ -7,7 +7,6 @@ from openai import OpenAI
 app = Flask(__name__)
 CORS(app)
 
-# API keys from environment variables
 COHERE_API_KEY = os.getenv("COHERE_API_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
@@ -21,27 +20,22 @@ def home():
 @app.route("/ask", methods=["POST"])
 def ask():
     data = request.json
-    question = data.get("question", "").strip()
+    question = data.get("question", "")
     premium = data.get("premium", False)
 
     if not question:
         return jsonify({"error": "No question provided"}), 400
 
     try:
-        # PREMIUM USERS → OpenAI
         if premium:
             response = openai_client.chat.completions.create(
                 model="gpt-4o-mini",
-                messages=[
-                    {"role": "user", "content": question}
-                ]
+                messages=[{"role": "user", "content": question}]
             )
             answer = response.choices[0].message.content
-
-        # FREE USERS → COHERE CHAT
         else:
             response = co.chat(
-                model="command-r-plus",
+                model="command-xlarge-nightly",  # <-- updated
                 message=question
             )
             answer = response.text
@@ -50,7 +44,6 @@ def ask():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
