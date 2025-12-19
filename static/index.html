@@ -54,7 +54,7 @@
       const q = document.getElementById("question").value;
       const premium = document.getElementById("premium").checked;
 
-      document.getElementById("output").innerHTML = "Thinking...";
+      document.getElementById("output").innerText = "Thinking...";
 
       try {
         const res = await fetch("/ask", {
@@ -73,4 +73,4 @@
     }
   </script>
 </body>
-    </html>
+  </html>
