@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mentis AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Markdown-it & KaTeX for rendering -->
   <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
@@ -12,66 +12,84 @@
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 
   <style>
-    body { font-family: Arial, sans-serif; max-width: 800px; margin: 30px auto; padding: 0 15px; }
-    h1 { text-align: center; color: #2d6cdf; }
-    textarea { width: 100%; height: 100px; padding: 10px; font-size: 16px; }
-    button { padding: 10px 20px; font-size: 16px; margin-top: 10px; cursor: pointer; }
-    .answer { border: 1px solid #ccc; padding: 15px; margin-top: 20px; border-radius: 8px; background: #f9f9f9; }
-    .collapsible { cursor: pointer; padding: 10px; width: 100%; text-align: left; border: none; outline: none; font-size: 18px; }
-    .content { display: none; padding: 0 10px; margin-top: 5px; }
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      font-size: 16px;
+      padding: 10px;
+    }
+    button {
+      padding: 10px 16px;
+      font-size: 16px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    .answer {
+      margin-top: 20px;
+      background: #f3f3f3;
+      padding: 15px;
+      border-radius: 8px;
+    }
   </style>
 </head>
+
 <body>
   <h1>Mentis AI Tutor</h1>
 
-  <textarea id="question" placeholder="Ask a question..."></textarea><br>
+  <textarea id="question" placeholder="Ask anything..."></textarea>
+  <br>
   <label>
     <input type="checkbox" id="premium"> Premium AI
-  </label><br>
-  <button onclick="askMentis()">Ask Mentis</button>
+  </label>
+  <br>
+  <button onclick="ask()">Ask Mentis</button>
 
-  <div id="answers"></div>
+  <div id="output"></div>
 
   <script>
     const md = window.markdownit();
 
-    async function askMentis() {
-      const question = document.getElementById('question').value.trim();
-      const premium = document.getElementById('premium').checked;
-      if (!question) return alert("Please type a question.");
+    async function ask() {
+      const q = document.getElementById("question").value.trim();
+      const premium = document.getElementById("premium").checked;
 
-      const answersDiv = document.getElementById('answers');
-      const container = document.createElement('div');
-      container.className = 'answer';
-      container.innerHTML = `<button class="collapsible">Question: ${question}</button><div class="content">Thinking...</div>`;
-      answersDiv.prepend(container);
+      if (!q) return alert("Please type a question.");
 
-      const contentDiv = container.querySelector('.content');
+      const outputDiv = document.getElementById("output");
+      outputDiv.innerHTML = "Thinking...";
 
       try {
-        const response = await fetch("/ask", {
+        const res = await fetch("/ask", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ question, premium })
+          body: JSON.stringify({ question: q, premium })
         });
-        const data = await response.json();
 
-        // Render Markdown & LaTeX
-        const rendered = md.render(data.answer);
-        contentDiv.innerHTML = rendered;
-        renderMathInElement(contentDiv, { delimiters: [{left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false}] });
+        const data = await res.json();
 
-      } catch (err) {
-        contentDiv.innerHTML = "Error fetching answer: " + err;
+        // Render Markdown
+        outputDiv.innerHTML = `<div class="answer">${md.render(data.answer)}</div>`;
+
+        // Render LaTeX equations in the content
+        renderMathInElement(outputDiv, {
+          delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "$", right: "$", display: false },
+            { left: "\\[", right: "\\]", display: true },
+            { left: "\\(", right: "\\)", display: false }
+          ]
+        });
+
+      } catch (e) {
+        outputDiv.innerText = "Network error: " + e;
       }
-
-      // Collapsible toggle
-      const coll = container.querySelector(".collapsible");
-      coll.addEventListener("click", () => {
-        const content = coll.nextElementSibling;
-        content.style.display = content.style.display === "block" ? "none" : "block";
-      });
     }
   </script>
 </body>
-  </html>
+    </html>
