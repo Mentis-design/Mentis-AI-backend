@@ -6,12 +6,10 @@ import os
 app = Flask(__name__, static_folder="static")
 CORS(app)
 
-# Initialize Cohere client with your API key
 co = cohere.Client(os.environ.get("COHERE_API_KEY"))
 
 @app.route("/")
 def home():
-    # Serve the frontend
     return send_from_directory("static", "index.html")
 
 @app.route("/ask", methods=["POST"])
@@ -23,10 +21,9 @@ def ask():
         if not question:
             return jsonify({"answer": "Please ask a question."})
 
-        # Use a valid Cohere model
         response = co.chat(
-            message=question,
-            model="command-r-plus"
+            model="command-light",  # or another valid Cohere Chat API model
+            message=question
         )
 
         return jsonify({"answer": response.text})
