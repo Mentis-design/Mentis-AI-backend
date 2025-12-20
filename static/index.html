@@ -1,96 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Mentis AI</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>Mentis — Think Smarter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Markdown-it & KaTeX for rendering -->
   <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 
   <style>
     body {
-      font-family: Arial, sans-serif;
+      margin: 0;
+      font-family: "Inter", Arial, sans-serif;
+      background: #f6f9fc;
+      color: #1f2933;
+    }
+
+    header {
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      color: #2563eb;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      color: #4b5563;
+    }
+
+    .container {
       max-width: 800px;
       margin: auto;
       padding: 20px;
     }
+
     textarea {
       width: 100%;
-      height: 100px;
+      height: 120px;
+      padding: 15px;
       font-size: 16px;
-      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      resize: none;
     }
+
     button {
-      padding: 10px 16px;
+      margin-top: 15px;
+      padding: 12px 24px;
       font-size: 16px;
-      margin-top: 10px;
+      border-radius: 999px;
+      border: none;
+      background: #2563eb;
+      color: white;
       cursor: pointer;
     }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
     .answer {
-      margin-top: 20px;
-      background: #f3f3f3;
-      padding: 15px;
-      border-radius: 8px;
+      margin-top: 30px;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    }
+
+    footer {
+      margin-top: 60px;
+      padding: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #6b7280;
     }
   </style>
 </head>
 
 <body>
-  <h1>Mentis AI Tutor</h1>
 
-  <textarea id="question" placeholder="Ask anything..."></textarea>
-  <br>
-  <label>
-    <input type="checkbox" id="premium"> Premium AI
-  </label>
-  <br>
-  <button onclick="ask()">Ask Mentis</button>
+<header>
+  <h1>Mentis</h1>
+  <p>Your AI tutor for clear thinking & better learning</p>
+</header>
+
+<div class="container">
+  <textarea id="question" placeholder="Ask a question…"></textarea>
+  <br />
+  <button onclick="askMentis()">Ask Mentis</button>
 
   <div id="output"></div>
+</div>
 
-  <script>
-    const md = window.markdownit();
+<footer>
+  © 2025 Mentis · Built for learners
+</footer>
 
-    async function ask() {
-      const q = document.getElementById("question").value.trim();
-      const premium = document.getElementById("premium").checked;
+<script>
+  const md = window.markdownit();
 
-      if (!q) return alert("Please type a question.");
+  async function askMentis() {
+    const question = document.getElementById("question").value.trim();
+    const output = document.getElementById("output");
 
-      const outputDiv = document.getElementById("output");
-      outputDiv.innerHTML = "Thinking...";
-
-      try {
-        const res = await fetch("/ask", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ question: q, premium })
-        });
-
-        const data = await res.json();
-
-        // Render Markdown
-        outputDiv.innerHTML = `<div class="answer">${md.render(data.answer)}</div>`;
-
-        // Render LaTeX equations in the content
-        renderMathInElement(outputDiv, {
-          delimiters: [
-            { left: "$$", right: "$$", display: true },
-            { left: "$", right: "$", display: false },
-            { left: "\\[", right: "\\]", display: true },
-            { left: "\\(", right: "\\)", display: false }
-          ]
-        });
-
-      } catch (e) {
-        outputDiv.innerText = "Network error: " + e;
-      }
+    if (!question) {
+      alert("Please enter a question.");
+      return;
     }
-  </script>
+
+    output.innerHTML = "Thinking…";
+
+    try {
+      const res = await fetch("/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question })
+      });
+
+      const data = await res.json();
+      output.innerHTML = `<div class="answer">${md.render(data.answer)}</div>`;
+    } catch (err) {
+      output.innerHTML = "Network error. Please try again.";
+    }
+  }
+</script>
+
 </body>
-  </html>
-  
+    </html>
