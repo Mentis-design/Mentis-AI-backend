@@ -14,19 +14,18 @@ def home():
 
 @app.route("/ask", methods=["POST"])
 def ask():
+    data = request.json
+    question = data.get("question", "").strip()
+
+    if not question:
+        return jsonify({"answer": "Please ask a question."})
+
     try:
-        data = request.get_json(force=True)
-        question = data.get("question", "").strip()
-
-        if not question:
-            return jsonify({"answer": "Please ask a question."})
-
         response = co.chat(
-            message=question   # ❗ NO model specified
+            model="command-light",  # Update to valid Cohere model
+            message=question
         )
-
         return jsonify({"answer": response.text})
-
     except Exception as e:
         return jsonify({"answer": f"Server error: {str(e)}"}), 500
 
