@@ -14,20 +14,22 @@ def home():
 
 @app.route("/ask", methods=["POST"])
 def ask():
-    data = request.get_json()
-    question = data.get("question", "").strip()
+    try:
+        data = request.get_json()
+        question = data.get("question", "").strip()
 
-    if not question:
-        return jsonify({"answer": "Please ask a question."})
+        if not question:
+            return jsonify({"answer": "Please ask a question."})
 
-    response = co.chat(
-        model="command-r-plus",
-        message=question
-    )
+        response = co.chat(
+            model="command-light",
+            message=question
+        )
 
-    return jsonify({
-        "answer": response.text
-    })
+        return jsonify({"answer": response.text})
+
+    except Exception as e:
+        return jsonify({"answer": f"Server error: {str(e)}"}), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
