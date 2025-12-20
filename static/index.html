@@ -2,13 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Mentis AI Tutor</title>
+  <title>Mentis AI</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 
   <style>
     body {
@@ -16,66 +13,64 @@
       max-width: 800px;
       margin: auto;
       padding: 20px;
-      background: #fefefe;
     }
-    h1 { text-align: center; color: #2d6cdf; }
-    textarea { width: 100%; height: 100px; font-size: 16px; padding: 10px; margin-top: 10px; }
-    button { padding: 10px 20px; font-size: 16px; margin-top: 10px; cursor: pointer; }
-    .answer { margin-top: 20px; background: #f3f3f3; padding: 15px; border-radius: 8px; }
-    .collapsible { cursor: pointer; font-size: 18px; background: #e0e0e0; border: none; border-radius: 5px; padding: 8px; width: 100%; text-align: left; }
-    .content { display: none; padding: 10px; margin-top: 5px; }
+    textarea {
+      width: 100%;
+      height: 100px;
+      font-size: 16px;
+      padding: 10px;
+    }
+    button {
+      padding: 10px 16px;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    .answer {
+      margin-top: 20px;
+      background: #f3f3f3;
+      padding: 15px;
+      border-radius: 8px;
+    }
   </style>
 </head>
 
 <body>
   <h1>Mentis AI Tutor</h1>
 
-  <textarea id="question" placeholder="Ask anything..."></textarea><br>
-  <label><input type="checkbox" id="premium"> Premium AI</label><br>
-  <button onclick="askMentis()">Ask Mentis</button>
+  <textarea id="question" placeholder="Ask anything..."></textarea>
+  <br>
+  <label>
+    <input type="checkbox" id="premium"> Premium AI
+  </label>
+  <br>
+  <button onclick="ask()">Ask Mentis</button>
 
-  <div id="answers"></div>
+  <div id="output"></div>
 
   <script>
     const md = window.markdownit();
 
-    async function askMentis() {
-      const question = document.getElementById('question').value.trim();
-      const premium = document.getElementById('premium').checked;
-      if (!question) return alert("Please type a question.");
+    async function ask() {
+      const q = document.getElementById("question").value;
+      const premium = document.getElementById("premium").checked;
 
-      const answersDiv = document.getElementById('answers');
-      const container = document.createElement('div');
-      container.className = 'answer';
-      container.innerHTML = `<button class="collapsible">Question: ${question}</button><div class="content">Thinking...</div>`;
-      answersDiv.prepend(container);
-
-      const contentDiv = container.querySelector('.content');
+      document.getElementById("output").innerText = "Thinking...";
 
       try {
         const res = await fetch("/ask", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ question, premium })
+          body: JSON.stringify({ question: q, premium })
         });
+
         const data = await res.json();
-
-        // Render Markdown & LaTeX
-        const rendered = md.render(data.answer);
-        contentDiv.innerHTML = rendered;
-        renderMathInElement(contentDiv);
-
-      } catch (err) {
-        contentDiv.innerHTML = "Network error: " + err;
+        document.getElementById("output").innerHTML =
+          `<div class="answer">${md.render(data.answer)}</div>`;
+      } catch (e) {
+        document.getElementById("output").innerText =
+          "Network error: " + e;
       }
-
-      // Collapsible toggle
-      const coll = container.querySelector(".collapsible");
-      coll.addEventListener("click", () => {
-        const content = coll.nextElementSibling;
-        content.style.display = content.style.display === "block" ? "none" : "block";
-      });
     }
   </script>
 </body>
-    </html>
+  </html>
