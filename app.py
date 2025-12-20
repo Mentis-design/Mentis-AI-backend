@@ -22,8 +22,7 @@ def ask():
             return jsonify({"answer": "Please ask a question."})
 
         response = co.chat(
-            model="command-light",  # or another valid Cohere Chat API model
-            message=question
+            message=question   # ❗ NO model specified
         )
 
         return jsonify({"answer": response.text})
