@@ -1,87 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Mentis</title>
 
-  <!-- MathJax for beautiful equations -->
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 
   <style>
     body {
-      margin: 0;
-      font-family: "Inter", system-ui, sans-serif;
+      font-family: Inter, system-ui, sans-serif;
       background: linear-gradient(135deg, #0f172a, #020617);
       color: #e5e7eb;
+      margin: 0;
+      padding: 40px;
     }
 
-    .container {
-      max-width: 900px;
+    .card {
+      max-width: 800px;
       margin: auto;
-      padding: 40px 20px;
-    }
-
-    h1 {
-      font-size: 2.5rem;
-      text-align: center;
-      margin-bottom: 30px;
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
     }
 
     textarea {
       width: 100%;
-      height: 120px;
-      padding: 15px;
-      font-size: 1rem;
+      padding: 16px;
       border-radius: 12px;
       border: none;
-      outline: none;
+      font-size: 16px;
       resize: none;
     }
 
     button {
-      margin-top: 15px;
-      width: 100%;
-      padding: 14px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      background: #22c55e;
-      border: none;
+      margin-top: 12px;
+      padding: 14px 22px;
       border-radius: 12px;
+      border: none;
+      background: #6366f1;
+      color: white;
+      font-size: 16px;
       cursor: pointer;
     }
 
-    .response {
-      margin-top: 40px;
-      background: rgba(255,255,255,0.06);
-      border-radius: 16px;
-      padding: 30px;
+    .answer {
+      margin-top: 25px;
       line-height: 1.7;
-    }
-
-    .equation {
-      text-align: center;
-      font-size: 1.3rem;
-      margin: 25px 0;
+      font-size: 16px;
     }
   </style>
 </head>
+
 <body>
-
-  <div class="container">
-    <h1>Mentis 🧠</h1>
-
-    <textarea id="question" placeholder="Ask anything..."></textarea>
-    <button onclick="ask()">Learn</button>
-
-    <div id="output" class="response"></div>
+  <div class="card">
+    <h1>Mentis</h1>
+    <textarea id="question" rows="4" placeholder="Ask anything..."></textarea>
+    <button onclick="ask()">Ask</button>
+    <div id="answer" class="answer"></div>
   </div>
 
   <script>
     async function ask() {
       const q = document.getElementById("question").value;
-      const output = document.getElementById("output");
-
-      output.innerHTML = "Thinking...";
+      const answerDiv = document.getElementById("answer");
+      answerDiv.innerHTML = "Thinking...";
 
       const res = await fetch("/ask", {
         method: "POST",
@@ -90,18 +80,13 @@
       });
 
       const data = await res.json();
+      answerDiv.innerHTML = data.answer;
 
-      output.innerHTML = `
-        <p>${data.answer.replace(/\n/g, "<br>")}</p>
-
-        <div class="equation">
-          $$6CO_2 + 6H_2O + \\text{light energy} \\rightarrow C_6H_{12}O_6 + 6O_2$$
-        </div>
-      `;
-
-      MathJax.typeset();
+      // 🔑 Only render math if it exists
+      if (data.answer.includes("$$") || data.answer.includes("\\(")) {
+        MathJax.typesetPromise();
+      }
     }
   </script>
-
 </body>
-  </html>
+</html>
