@@ -1,0 +1,21 @@
+.answer {
+  background: #f8faff;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+  line-height: 1.7;
+}
+
+.answer h1, .answer h2, .answer h3 {
+  color: #2d6cdf;
+}
+
+.answer ul {
+  padding-left: 20px;
+}
+
+.answer blockquote {
+  border-left: 4px solid #2d6cdf;
+  padding-left: 12px;
+  color: #555;
+  }
