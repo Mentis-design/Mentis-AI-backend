@@ -6,7 +6,26 @@ import os
 app = Flask(__name__, static_folder="static")
 CORS(app)
 
+# Initialize Cohere client
 co = cohere.Client(os.environ.get("COHERE_API_KEY"))
+
+def get_working_model():
+    """
+    Fetch available models from Cohere and select the first supported chat model.
+    """
+    try:
+        models = co.list_models().models  # returns a list of model names
+        for model_name in models:
+            if model_name.startswith("command"):
+                print(f"Selected model: {model_name}")
+                return model_name
+    except Exception as e:
+        print(f"Error fetching models: {e}")
+    # fallback if something goes wrong
+    return "command-xlarge"
+
+# Refresh the model each time server starts
+DEFAULT_MODEL = get_working_model()
 
 @app.route("/")
 def home():
@@ -14,18 +33,20 @@ def home():
 
 @app.route("/ask", methods=["POST"])
 def ask():
-    data = request.json
-    question = data.get("question", "").strip()
-
-    if not question:
-        return jsonify({"answer": "Please ask a question."})
-
     try:
+        data = request.get_json(force=True)
+        question = data.get("question", "").strip()
+
+        if not question:
+            return jsonify({"answer": "Please ask a question."})
+
         response = co.chat(
-            model="command-light",  # Update to valid Cohere model
+            model=DEFAULT_MODEL,
             message=question
         )
+
         return jsonify({"answer": response.text})
+
     except Exception as e:
         return jsonify({"answer": f"Server error: {str(e)}"}), 500
 
