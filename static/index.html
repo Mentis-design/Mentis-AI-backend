@@ -1,216 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Mentis AI</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mentis AI Tutor</title>
 
-  <!-- Markdown -->
+  <!-- Markdown-it & KaTeX for rendering -->
   <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
-
-  <!-- KaTeX -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 
   <style>
-    :root {
-      --bg: #0f172a;
-      --card: #111827;
-      --accent: #38bdf8;
-      --text: #e5e7eb;
-      --muted: #9ca3af;
-    }
-
     body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: linear-gradient(135deg, #020617, #0f172a);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    .container {
+      font-family: "Segoe UI", Arial, sans-serif;
       max-width: 900px;
       margin: auto;
-      padding: 40px 20px;
+      padding: 20px;
+      background: #fdfdfd;
+      color: #333;
     }
 
-    header {
+    h1 {
       text-align: center;
-      margin-bottom: 40px;
-    }
-
-    header h1 {
-      font-size: 2.6rem;
-      margin-bottom: 10px;
-      background: linear-gradient(to right, #38bdf8, #facc15);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    header p {
-      color: var(--muted);
-      font-size: 1.1rem;
+      color: #2d6cdf;
+      margin-bottom: 25px;
     }
 
     textarea {
       width: 100%;
       height: 120px;
-      padding: 16px;
-      font-size: 1rem;
-      border-radius: 12px;
-      border: none;
-      resize: none;
-      outline: none;
-      background: var(--card);
-      color: var(--text);
-    }
-
-    .controls {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 15px;
-      flex-wrap: wrap;
-      gap: 10px;
+      font-size: 16px;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+      resize: vertical;
     }
 
     button {
-      background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 6px;
       border: none;
-      color: #020617;
-      padding: 12px 22px;
-      border-radius: 999px;
-      font-size: 1rem;
+      background: #2d6cdf;
+      color: white;
       cursor: pointer;
-      font-weight: 600;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      transition: 0.2s;
     }
 
     button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 10px 25px rgba(56,189,248,0.35);
-    }
-
-    label {
-      font-size: 0.9rem;
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      background: #1c4ab8;
     }
 
     .answer {
-      margin-top: 30px;
-      background: var(--card);
-      padding: 25px;
-      border-radius: 16px;
-      line-height: 1.7;
-      font-size: 1.05rem;
-      animation: fadeIn 0.4s ease;
+      margin-top: 20px;
+      background: #f3f8ff;
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 4px solid #2d6cdf;
     }
 
-    .answer h1, .answer h2, .answer h3 {
-      color: #7dd3fc;
-    }
-
-    .answer ul {
-      padding-left: 22px;
-    }
-
-    .answer code {
-      background: #020617;
-      padding: 2px 6px;
+    .collapsible {
+      cursor: pointer;
+      padding: 10px;
+      border: none;
+      outline: none;
+      font-size: 18px;
+      width: 100%;
+      text-align: left;
+      background: #e7f0ff;
       border-radius: 6px;
-      color: #facc15;
+      margin-top: 15px;
     }
 
-    .katex-display {
-      margin: 1.5em 0;
-      overflow-x: auto;
-    }
-
-    footer {
-      text-align: center;
-      margin-top: 50px;
-      color: var(--muted);
-      font-size: 0.85rem;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(5px); }
-      to { opacity: 1; transform: translateY(0); }
+    .content {
+      display: none;
+      padding: 10px;
     }
   </style>
 </head>
-
 <body>
-  <div class="container">
-    <header>
-      <h1>Mentis</h1>
-      <p>Your AI-powered study companion</p>
-    </header>
 
-    <textarea id="question" placeholder="Ask something like: Explain photosynthesis with equations…"></textarea>
+  <h1>Mentis AI Tutor</h1>
 
-    <div class="controls">
-      <label>
-        <input type="checkbox" id="premium">
-        Premium mode
-      </label>
-      <button onclick="ask()">Ask Mentis</button>
-    </div>
+  <textarea id="question" placeholder="Ask your question here..."></textarea><br>
+  <label>
+    <input type="checkbox" id="premium"> Premium AI
+  </label><br><br>
+  <button onclick="askMentis()">Ask Mentis</button>
 
-    <div id="output"></div>
-
-    <footer>
-      © 2025 Mentis · Learn smarter, not harder
-    </footer>
-  </div>
+  <div id="answers"></div>
 
   <script>
-    const md = window.markdownit({
-      html: false,
-      linkify: true,
-      breaks: true
-    });
+    const md = window.markdownit();
 
-    async function ask() {
-      const q = document.getElementById("question").value.trim();
+    async function askMentis() {
+      const question = document.getElementById("question").value.trim();
       const premium = document.getElementById("premium").checked;
-      const output = document.getElementById("output");
 
-      if (!q) {
-        alert("Please enter a question.");
-        return;
-      }
+      if (!question) return alert("Please type a question.");
 
-      output.innerHTML = "<div class='answer'>Thinking…</div>";
+      const answersDiv = document.getElementById("answers");
+      const container = document.createElement("div");
+      container.className = "answer";
+      container.innerHTML = `<button class="collapsible">Question: ${question}</button><div class="content">Thinking...</div>`;
+      answersDiv.prepend(container);
+
+      const contentDiv = container.querySelector(".content");
 
       try {
-        const res = await fetch("/ask", {
+        const response = await fetch("/ask", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ question: q, premium })
+          body: JSON.stringify({ question, premium })
         });
 
-        const data = await res.json();
+        const data = await response.json();
 
-        output.innerHTML = `<div class="answer">${md.render(data.answer)}</div>`;
-
-        renderMathInElement(output, {
+        // Render Markdown and KaTeX
+        const rendered = md.render(data.answer);
+        contentDiv.innerHTML = rendered;
+        renderMathInElement(contentDiv, {
           delimiters: [
-            { left: "$$", right: "$$", display: true },
-            { left: "$", right: "$", display: false }
+            {left: "$$", right: "$$", display: true},
+            {left: "\\(", right: "\\)", display: false}
           ]
         });
 
-      } catch (e) {
-        output.innerHTML =
-          `<div class="answer">❌ Network error. Please try again.</div>`;
+      } catch (err) {
+        contentDiv.innerHTML = "Network error: " + err;
       }
+
+      // Collapsible toggle
+      const coll = container.querySelector(".collapsible");
+      coll.addEventListener("click", () => {
+        const content = coll.nextElementSibling;
+        content.style.display = content.style.display === "block" ? "none" : "block";
+      });
     }
   </script>
+
 </body>
-  </html>
+    </html>
