@@ -1,47 +1,180 @@
-from flask import Flask, request, jsonify, render_template
-from flask_cors import CORS
-import cohere
-import os
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mentis 🧠</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-app = Flask(__name__)
-CORS(app)
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-co = cohere.Client(os.environ.get("COHERE_API_KEY"))
+  <!-- MathJax for equations -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 
-SYSTEM_PROMPT = """
-You are Mentis, a study tutor.
-Rules:
-- Use clear headings and bullet points
-- Always format equations in LaTeX
-- Use $$ ... $$ for block equations
-- Use $ ... $ for inline equations
-- Never repeat equations unless needed
-- Explain step-by-step like a textbook
-"""
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --accent: #38bdf8;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+    }
 
-@app.route("/")
-def home():
-    return render_template("index.html")
+    * {
+      box-sizing: border-box;
+    }
 
-@app.route("/ask", methods=["POST"])
-def ask():
-    data = request.json
-    question = data.get("question", "").strip()
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top, #020617, var(--bg));
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 40px 16px;
+    }
 
-    if not question:
-        return jsonify({"answer": "Please ask a question."})
+    .app {
+      width: 100%;
+      max-width: 900px;
+    }
 
-    try:
-        response = co.chat(
-            message=f"{SYSTEM_PROMPT}\n\nQuestion: {question}"
-            # ⚠️ NO MODEL SPECIFIED — Cohere auto-picks
-        )
+    header {
+      margin-bottom: 24px;
+    }
 
-        return jsonify({"answer": response.text})
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin: 0;
+    }
 
-    except Exception as e:
-        return jsonify({"answer": f"Server error: {str(e)}"}), 500
+    .subtitle {
+      color: var(--muted);
+      margin-top: 6px;
+    }
 
+    .card {
+      background: linear-gradient(180deg, #020617, var(--card));
+      border: 1px solid #1f2937;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    }
 
-if __name__ == "__main__":
-    app.run(debug=True)
+    textarea {
+      width: 100%;
+      min-height: 80px;
+      background: #020617;
+      border: 1px solid #1f2937;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 1rem;
+      color: var(--text);
+      resize: vertical;
+      outline: none;
+    }
+
+    textarea::placeholder {
+      color: var(--muted);
+    }
+
+    button {
+      margin-top: 12px;
+      background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+      border: none;
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #020617;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .answer {
+      margin-top: 24px;
+      line-height: 1.7;
+      font-size: 1.05rem;
+    }
+
+    .answer h3 {
+      margin-top: 24px;
+      margin-bottom: 8px;
+    }
+
+    .answer ul {
+      padding-left: 20px;
+    }
+
+    .answer li {
+      margin-bottom: 6px;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      margin-top: 30px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header>
+      <h1>Mentis 🧠</h1>
+      <div class="subtitle">Learn clearly. Understand deeply.</div>
+    </header>
+
+    <div class="card">
+      <textarea id="question" placeholder="Ask anything (e.g. What is photosynthesis?)"></textarea>
+      <button onclick="ask()">Ask Mentis</button>
+    </div>
+
+    <div class="card answer" id="answer"></div>
+
+    <div class="footer">
+      Built with curiosity ✨
+    </div>
+  </div>
+
+  <script>
+    async function ask() {
+      const q = document.getElementById('question').value;
+      const answerDiv = document.getElementById('answer');
+      answerDiv.innerHTML = "Thinking…";
+
+      try {
+        const res = await fetch('/ask', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: q })
+        });
+
+        const data = await res.json();
+        answerDiv.innerHTML = data.answer;
+
+        // Re-render equations every time new content loads
+        MathJax.typesetPromise();
+      } catch (e) {
+        answerDiv.innerHTML = "Something went wrong.";
+      }
+    }
+  </script>
+</body>
+</html>
