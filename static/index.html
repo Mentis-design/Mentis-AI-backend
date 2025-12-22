@@ -1,92 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Mentis</title>
+<meta charset="UTF-8" />
+<title>Mentis</title>
 
-  <!-- MathJax -->
-  <script>
-    window.MathJax = {
-      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-      svg: { fontCache: 'global' }
-    };
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <style>
-    body {
-      font-family: Inter, system-ui, sans-serif;
-      background: linear-gradient(135deg, #0f172a, #020617);
-      color: #e5e7eb;
-      margin: 0;
-      padding: 40px;
-    }
+<!-- KaTeX -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/auto-render.min.js"></script>
 
-    .card {
-      max-width: 800px;
-      margin: auto;
-      background: rgba(15, 23, 42, 0.9);
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-    }
+<!-- Markdown -->
+<script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
 
-    textarea {
-      width: 100%;
-      padding: 16px;
-      border-radius: 12px;
-      border: none;
-      font-size: 16px;
-      resize: none;
-    }
+<style>
+body {
+  font-family: Inter, sans-serif;
+  background: linear-gradient(135deg, #0f172a, #020617);
+  color: #e5e7eb;
+  margin: 0;
+  padding: 0;
+}
 
-    button {
-      margin-top: 12px;
-      padding: 14px 22px;
-      border-radius: 12px;
-      border: none;
-      background: #6366f1;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-    }
+.container {
+  max-width: 900px;
+  margin: 60px auto;
+  padding: 30px;
+}
 
-    .answer {
-      margin-top: 25px;
-      line-height: 1.7;
-      font-size: 16px;
-    }
-  </style>
+h1 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: rgba(255,255,255,0.05);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+}
+
+textarea {
+  width: 100%;
+  height: 90px;
+  border-radius: 12px;
+  border: none;
+  padding: 14px;
+  font-size: 1rem;
+  outline: none;
+}
+
+button {
+  margin-top: 12px;
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 12px;
+  background: #6366f1;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #4f46e5;
+}
+
+.answer {
+  margin-top: 30px;
+  line-height: 1.8;
+}
+
+.answer h3 {
+  margin-top: 20px;
+}
+
+.answer ul {
+  padding-left: 20px;
+}
+
+.answer blockquote {
+  border-left: 4px solid #6366f1;
+  padding-left: 12px;
+  opacity: 0.9;
+}
+</style>
 </head>
 
 <body>
+<div class="container">
+  <h1>Mentis 🧠</h1>
+
   <div class="card">
-    <h1>Mentis</h1>
-    <textarea id="question" rows="4" placeholder="Ask anything..."></textarea>
-    <button onclick="ask()">Ask</button>
-    <div id="answer" class="answer"></div>
+    <textarea id="question" placeholder="Ask anything…"></textarea>
+    <button onclick="ask()">Ask Mentis</button>
+
+    <div id="output" class="answer"></div>
   </div>
+</div>
 
-  <script>
-    async function ask() {
-      const q = document.getElementById("question").value;
-      const answerDiv = document.getElementById("answer");
-      answerDiv.innerHTML = "Thinking...";
+<script>
+const md = new markdownit({
+  html: true,
+  breaks: true
+});
 
-      const res = await fetch("/ask", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: q })
-      });
+function ask() {
+  const q = document.getElementById("question").value;
+  document.getElementById("output").innerHTML = "Thinking…";
 
-      const data = await res.json();
-      answerDiv.innerHTML = data.answer;
+  fetch("/ask", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({question: q})
+  })
+  .then(res => res.json())
+  .then(data => {
+    const output = document.getElementById("output");
+    output.innerHTML = md.render(data.answer);
 
-      // 🔑 Only render math if it exists
-      if (data.answer.includes("$$") || data.answer.includes("\\(")) {
-        MathJax.typesetPromise();
-      }
-    }
-  </script>
+    renderMathInElement(output, {
+      delimiters: [
+        {left: "$$", right: "$$", display: true},
+        {left: "$", right: "$", display: false}
+      ]
+    });
+  });
+}
+</script>
 </body>
-</html>
+  </html>
