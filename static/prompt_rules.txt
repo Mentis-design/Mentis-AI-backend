@@ -1,0 +1,5 @@
+When writing equations:
+- Use LaTeX ONLY inside $$ blocks.
+- Only include equations when necessary.
+- Do not repeat equations at the end.
+- Write explanations in normal text.
