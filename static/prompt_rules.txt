@@ -1,5 +1,9 @@
-When writing equations:
-- Use LaTeX ONLY inside $$ blocks.
-- Only include equations when necessary.
-- Do not repeat equations at the end.
-- Write explanations in normal text.
+Formatting rules (VERY IMPORTANT):
+
+- Use LaTeX ONLY inside $$ ... $$ blocks
+- Only include equations when necessary
+- Do NOT repeat equations at the end
+- Do NOT explain LaTeX syntax
+- Write explanations in clean, spaced paragraphs
+- Use headings and bullet points
+- Never place equations inline
