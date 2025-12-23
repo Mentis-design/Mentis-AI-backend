@@ -1,44 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Mentis 🧠</title>
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; background: #f5f7fa; color: #222; }
-        #container { max-width: 800px; margin: auto; }
-        input, button { padding: 10px; margin: 5px 0; font-size: 16px; }
-        #answer { margin-top: 20px; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Mentis 🧠</title>
+
+  <!-- MathJax for equations -->
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="/static/styles.css" />
 </head>
+
 <body>
-    <div id="container">
-        <h1>Mentis 🧠</h1>
-        <input type="text" id="question" placeholder="Ask a question..." size="60">
-        <button onclick="askMentis()">Ask Mentis</button>
+  <div class="app">
+    <h1>Mentis 🧠</h1>
+    <p class="subtitle">Your smart study companion</p>
 
-        <div id="answer"></div>
-    </div>
+    <input
+      id="question"
+      type="text"
+      placeholder="Ask Mentis anything..."
+      autocomplete="off"
+    />
 
-    <script>
-        async function askMentis() {
-            const question = document.getElementById("question").value;
-            if (!question) return;
+    <button onclick="askMentis()">Ask Mentis</button>
 
-            const res = await fetch("http://localhost:5000/ask", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ question })
-            });
+    <div id="answer"></div>
+  </div>
 
-            const data = await res.json();
-            if (data.error) {
-                document.getElementById("answer").innerText = "Error: " + data.error;
-            } else {
-                document.getElementById("answer").innerHTML = data.answer;
-                MathJax.typeset(); // Render LaTeX equations
-            }
-        }
-    </script>
+  <script>
+    async function askMentis() {
+      const question = document.getElementById("question").value.trim();
+      if (!question) return;
+
+      document.getElementById("answer").innerHTML = "Thinking…";
+
+      const res = await fetch("/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question })
+      });
+
+      const data = await res.json();
+
+      document.getElementById("answer").innerHTML =
+        data.error ? "Error: " + data.error : data.answer;
+
+      MathJax.typesetPromise();
+    }
+  </script>
 </body>
-      </html>
+    </html>
