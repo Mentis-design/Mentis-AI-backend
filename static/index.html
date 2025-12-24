@@ -1,68 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Mentis 🧠</title>
+    <meta charset="UTF-8">
+    <title>Mentis 🧠</title>
 
-  <!-- MathJax -->
-  <script>
-    window.MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$', '$$']]
-      },
-      options: {
-        skipHtmlTags: ['script', 'style']
-      }
-    };
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <!-- MathJax config -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$']]
+        }
+      };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 
-  <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
 
 <body>
-  <main class="app">
-    <header class="header">
-      <h1>Mentis 🧠</h1>
-      <p class="subtitle">Ask. Understand. Learn.</p>
-    </header>
+    <main class="app">
+        <header class="header">
+            <h1>Mentis 🧠</h1>
+            <p class="subtitle">Your AI study assistant</p>
+        </header>
 
-    <section class="input-box">
-      <input
-        id="question"
-        type="text"
-        placeholder="Ask Mentis anything…"
-        autocomplete="off"
-      />
-      <button onclick="askMentis()">Ask Mentis</button>
-    </section>
+        <section class="input-section">
+            <input
+                id="question"
+                type="text"
+                placeholder="Ask Mentis anything…"
+                autocomplete="off"
+            />
+            <button onclick="askMentis()">Ask Mentis</button>
+        </section>
 
-    <section id="answer" class="answer"></section>
-  </main>
+        <section id="answer" class="answer-box"></section>
+    </main>
 
-  <script>
-    async function askMentis() {
-      const q = document.getElementById("question").value.trim();
-      if (!q) return;
+<script>
+async function askMentis() {
+    const q = document.getElementById("question").value.trim();
+    if (!q) return;
 
-      const answerBox = document.getElementById("answer");
-      answerBox.innerHTML = "<em>Thinking…</em>";
+    const answerBox = document.getElementById("answer");
+    answerBox.innerHTML = "Thinking…";
 
-      const res = await fetch("/ask", {
+    const res = await fetch("/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: q })
-      });
+    });
 
-      const data = await res.json();
+    const data = await res.json();
+    answerBox.innerHTML = data.error ? "Error: " + data.error : data.answer;
 
-      answerBox.innerHTML = data.error
-        ? `<span class="error">${data.error}</span>`
-        : data.answer;
-
-      MathJax.typesetPromise();
-    }
-  </script>
+    MathJax.typesetPromise();
+}
+</script>
 </body>
-</html>
+      </html>
