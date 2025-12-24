@@ -1,41 +1,28 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import cohere
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="static")
 CORS(app)
 
-# Cohere API key
-co = cohere.Client(os.environ.get("COHERE_API_KEY"))
+co = cohere.Client(os.getenv("COHERE_API_KEY"))
 
-# Load static formatting rules
-with open("static/prompt_rules.txt", "r") as f:
-    formatting_rules = f.read()
+with open("prompt_rules.txt") as f:
+    RULES = f.read()
+
+@app.route("/")
+def home():
+    return send_from_directory("static", "index.html")
 
 @app.route("/ask", methods=["POST"])
 def ask():
-    data = request.json
-    user_question = data.get("question", "").strip()
+    q = request.json.get("question", "")
 
-    if not user_question:
-        return jsonify({"error": "No question provided"}), 400
-
-    # Prepend formatting rules
-    full_prompt = f"{formatting_rules}\nQuestion: {user_question}"
+    prompt = f"{RULES}\n\nQuestion:\n{q}"
 
     try:
-        response = co.generate(
-            model=None,  # let Cohere choose working model
-            prompt=full_prompt,
-            max_tokens=500,
-            temperature=0.7,
-            stop_sequences=[]
-        )
-        answer_text = response.generations[0].text.strip()
-        return jsonify({"answer": answer_text})
+        res = co.chat(message=prompt)
+        return jsonify({"answer": res.text})
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-if __name__ == "__main__":
-    app.run(debug=True)
+        return jsonify({"answer": f"⚠️ Error: {str(e)}"})
