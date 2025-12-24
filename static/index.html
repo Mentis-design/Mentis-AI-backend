@@ -8,7 +8,7 @@
     <script>
       window.MathJax = {
         tex: {
-          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          inlineMath: [['$', '$']],
           displayMath: [['$$', '$$']]
         }
       };
@@ -16,58 +16,6 @@
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 
     <link rel="stylesheet" href="styles.css">
-
-    <style>
-        body {
-            font-family: Inter, Arial, sans-serif;
-            background: #f5f7fa;
-            margin: 0;
-            padding: 40px;
-            color: #222;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: auto;
-        }
-
-        h1 {
-            font-size: 2.2rem;
-            margin-bottom: 20px;
-        }
-
-        input {
-            width: 100%;
-            padding: 14px;
-            font-size: 16px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-        }
-
-        button {
-            margin-top: 12px;
-            padding: 12px 20px;
-            font-size: 16px;
-            border-radius: 8px;
-            border: none;
-            background: #2563eb;
-            color: white;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #1e4fd8;
-        }
-
-        #answer {
-            margin-top: 30px;
-            background: white;
-            padding: 24px;
-            border-radius: 12px;
-            line-height: 1.6;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        }
-    </style>
 </head>
 
 <body>
@@ -92,11 +40,13 @@ async function askMentis() {
     });
 
     const data = await res.json();
+
     document.getElementById("answer").innerHTML =
         data.error ? "Error: " + data.error : data.answer;
 
+    // ✅ Renders LaTeX correctly
     MathJax.typesetPromise();
 }
 </script>
 </body>
-        </html>
+    </html>
