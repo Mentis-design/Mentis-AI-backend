@@ -2,9 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
+    <!-- IMPORTANT for mobile scaling -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Mentis 🧠</title>
 
-    <!-- MathJax config -->
+    <!-- MathJax -->
     <script>
       window.MathJax = {
         tex: {
@@ -15,48 +19,44 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 
-    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-    <main class="app">
-        <header class="header">
-            <h1>Mentis 🧠</h1>
-            <p class="subtitle">Your AI study assistant</p>
-        </header>
+    <main class="page">
+        <section class="card">
+            <h1 class="title">Mentis 🧠</h1>
 
-        <section class="input-section">
-            <input
-                id="question"
-                type="text"
-                placeholder="Ask Mentis anything…"
-                autocomplete="off"
-            />
-            <button onclick="askMentis()">Ask Mentis</button>
+            <div class="input-group">
+                <input
+                    id="question"
+                    placeholder="Ask Mentis anything…"
+                    autocomplete="off"
+                />
+                <button onclick="askMentis()">Ask</button>
+            </div>
+
+            <div id="answer"></div>
         </section>
-
-        <section id="answer" class="answer-box"></section>
     </main>
 
 <script>
 async function askMentis() {
-    const q = document.getElementById("question").value.trim();
+    const q = document.getElementById("question").value;
     if (!q) return;
-
-    const answerBox = document.getElementById("answer");
-    answerBox.innerHTML = "Thinking…";
 
     const res = await fetch("/ask", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify({ question: q })
     });
 
     const data = await res.json();
-    answerBox.innerHTML = data.error ? "Error: " + data.error : data.answer;
+    document.getElementById("answer").innerHTML =
+        data.error ? "Error: " + data.error : data.answer;
 
     MathJax.typesetPromise();
 }
 </script>
 </body>
-      </html>
+        </html>
