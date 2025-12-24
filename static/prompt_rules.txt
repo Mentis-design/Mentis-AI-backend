@@ -1,16 +1,7 @@
-When writing answers:
-
-- Use normal paragraphs for explanations
-- Add blank lines between sections
-- Use bullet points where helpful
-
-For equations:
-- Use LaTeX ONLY inside $$ ... $$
-- NEVER use brackets [ ] around equations
-- NEVER repeat equations at the end
+When writing equations:
+- Use LaTeX ONLY inside $$ blocks
 - Only include equations when necessary
-
-Example:
-$$
-6CO_2 + 6H_2O + light \rightarrow C_6H_{12}O_6 + 6O_2
-$$
+- Do NOT repeat equations at the end
+- Write explanations in normal text
+- Keep spacing clean and readable
+- Do not escape LaTeX with backslashes
