@@ -1,4 +1,36 @@
-/* ===== RESET ===== */
+/* =========================
+   CSS VARIABLES (LIGHT)
+========================= */
+:root {
+  --bg: #F9FAFB;
+  --card: #FFFFFF;
+  --text: #111827;
+  --muted: #6B7280;
+  --border: #E5E7EB;
+
+  --primary: #1F4E79;
+  --accent: #2CB1BC;
+  --highlight: #F5B700;
+}
+
+/* =========================
+   DARK MODE
+========================= */
+[data-theme="dark"] {
+  --bg: #0F172A;
+  --card: #1E293B;
+  --text: #E5E7EB;
+  --muted: #9CA3AF;
+  --border: #334155;
+
+  --primary: #3B82F6;
+  --accent: #2CB1BC;
+  --highlight: #FACC15;
+}
+
+/* =========================
+   BASE RESET
+========================= */
 * {
   box-sizing: border-box;
 }
@@ -6,114 +38,94 @@
 body {
   margin: 0;
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #F9FAFB;
-  color: #111827;
+  background: var(--bg);
+  color: var(--text);
 }
 
-/* ===== APP LAYOUT ===== */
+/* =========================
+   APP LAYOUT (MOBILE FIRST)
+========================= */
 .app {
-  max-width: 680px;
+  max-width: 720px;
   margin: 0 auto;
-  padding: 20px 16px 40px;
+  padding: 16px;
 }
 
-/* ===== HEADER ===== */
-.header {
-  text-align: center;
-  margin-bottom: 28px;
+/* =========================
+   HEADER
+========================= */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
 }
 
-.logo {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #1F4E79;
+.top-bar h1 {
+  font-size: 1.6rem;
   margin: 0;
 }
 
-.subtitle {
-  font-size: 0.95rem;
-  color: #6B7280;
-  margin-top: 6px;
+#themeToggle {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 1rem;
+  cursor: pointer;
 }
 
-/* ===== INPUT AREA ===== */
-.input-section {
+/* =========================
+   CONTENT
+========================= */
+.content {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 input {
   width: 100%;
-  padding: 14px 16px;
-  font-size: 1rem;
-  border-radius: 12px;
-  border: 1px solid #E5E7EB;
-  outline: none;
-}
-
-input:focus {
-  border-color: #2CB1BC;
-}
-
-/* ===== BUTTON ===== */
-button {
   padding: 14px;
   font-size: 1rem;
   border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+}
+
+input::placeholder {
+  color: var(--muted);
+}
+
+.ask-btn {
+  padding: 14px;
+  border-radius: 12px;
   border: none;
-  background: #1F4E79;
-  color: white;
+  font-size: 1rem;
   font-weight: 600;
+  background: var(--primary);
+  color: white;
   cursor: pointer;
 }
 
-button:hover {
-  background: #163A5F;
+.ask-btn:active {
+  transform: scale(0.98);
 }
 
-/* ===== ANSWER CARD ===== */
-.answer-card {
-  margin-top: 28px;
-  background: #FFFFFF;
-  padding: 20px 18px;
+/* =========================
+   ANSWER CARD
+========================= */
+#answer {
+  margin-top: 16px;
+  padding: 18px;
+  background: var(--card);
   border-radius: 16px;
   line-height: 1.7;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-  font-size: 1rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
-/* ===== TEXT ===== */
-.answer-card h3 {
-  margin-top: 1.2em;
-  color: #1F4E79;
-}
-
-.answer-card p {
-  margin: 0.8em 0;
-}
-
-.loading {
-  color: #9CA3AF;
-}
-
-.error {
-  color: #EF4444;
-}
-
-/* ===== MATH ===== */
+/* MathJax spacing fix */
 mjx-container {
-  margin: 1em 0 !important;
   overflow-x: auto;
 }
-
-/* ===== DESKTOP ENHANCEMENT ===== */
-@media (min-width: 768px) {
-  .app {
-    padding-top: 40px;
-  }
-
-  .logo {
-    font-size: 2.3rem;
-  }
-  }
