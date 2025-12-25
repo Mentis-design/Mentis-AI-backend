@@ -16,12 +16,11 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
   <div class="app">
-
     <header class="top-bar">
       <h1>Mentis 🧠</h1>
       <button id="themeToggle" aria-label="Toggle dark mode">🌙</button>
@@ -33,53 +32,40 @@
         placeholder="Ask Mentis anything…"
         autocomplete="off"
       />
-
       <button class="ask-btn" onclick="askMentis()">Ask Mentis</button>
 
-      <div id="answer"></div>
+      <div id="answer" class="card"></div>
     </main>
-
   </div>
 
-<script>
-/* ---------- Dark Mode Logic ---------- */
-const toggle = document.getElementById("themeToggle");
-const root = document.documentElement;
+  <script>
+    async function askMentis() {
+      const q = document.getElementById("question").value;
+      if (!q) return;
 
-const savedTheme = localStorage.getItem("theme");
-const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const res = await fetch("/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: q })
+      });
 
-if (savedTheme) {
-  root.setAttribute("data-theme", savedTheme);
-} else if (systemDark) {
-  root.setAttribute("data-theme", "dark");
-}
+      const data = await res.json();
+      const answerBox = document.getElementById("answer");
 
-toggle.onclick = () => {
-  const isDark = root.getAttribute("data-theme") === "dark";
-  const newTheme = isDark ? "light" : "dark";
-  root.setAttribute("data-theme", newTheme);
-  localStorage.setItem("theme", newTheme);
-};
+      answerBox.innerHTML = data.error
+        ? `<span class="error">${data.error}</span>`
+        : data.answer;
 
-/* ---------- Ask Mentis ---------- */
-async function askMentis() {
-  const q = document.getElementById("question").value.trim();
-  if (!q) return;
+      MathJax.typesetPromise();
+    }
 
-  const res = await fetch("/ask", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({ question: q })
-  });
-
-  const data = await res.json();
-  document.getElementById("answer").innerHTML =
-    data.error ? "Error: " + data.error : data.answer;
-
-  MathJax.typesetPromise();
-}
-</script>
-
+    // Dark mode toggle
+    const toggle = document.getElementById("themeToggle");
+    toggle.onclick = () => {
+      document.body.classList.toggle("dark");
+      toggle.textContent =
+        document.body.classList.contains("dark") ? "☀️" : "🌙";
+    };
+  </script>
 </body>
-        </html>
+  </html>
