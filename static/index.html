@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mentis 🧠</title>
 
   <!-- MathJax -->
   <script>
     window.MathJax = {
       tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        inlineMath: [['$', '$']],
         displayMath: [['$$', '$$']]
       },
       svg: { fontCache: 'global' }
@@ -16,31 +17,36 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 
-  <link rel="stylesheet" href="/static/styles.css" />
+  <link rel="stylesheet" href="/static/styles.css">
 </head>
 
 <body>
-  <main class="page">
-    <section class="card">
-      <h1 class="title">Mentis 🧠</h1>
+  <main class="app">
+    <header class="header">
+      <h1 class="logo">Mentis 🧠</h1>
+      <p class="subtitle">Your calm, intelligent study assistant</p>
+    </header>
 
-      <div class="input-group">
-        <input
-          id="question"
-          type="text"
-          placeholder="Ask Mentis anything…"
-        />
-        <button onclick="askMentis()">Ask Mentis</button>
-      </div>
-
-      <div id="answer" class="answer"></div>
+    <section class="input-section">
+      <input
+        id="question"
+        type="text"
+        placeholder="Ask Mentis anything…"
+        autocomplete="off"
+      />
+      <button onclick="askMentis()">Ask Mentis</button>
     </section>
+
+    <section id="answer" class="answer-card"></section>
   </main>
 
   <script>
     async function askMentis() {
       const q = document.getElementById("question").value.trim();
       if (!q) return;
+
+      const answerBox = document.getElementById("answer");
+      answerBox.innerHTML = "<p class='loading'>Thinking…</p>";
 
       const res = await fetch("/ask", {
         method: "POST",
@@ -49,9 +55,7 @@
       });
 
       const data = await res.json();
-      const answerEl = document.getElementById("answer");
-
-      answerEl.innerHTML = data.error
+      answerBox.innerHTML = data.error
         ? `<p class="error">${data.error}</p>`
         : data.answer;
 
