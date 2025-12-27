@@ -8,10 +8,12 @@ function renderAnswer(raw) {
   const container = document.getElementById("output");
   container.innerHTML = md.render(raw);
 
-  renderMathInElement(container, {
-    delimiters: [
-      { left: "$$", right: "$$", display: true },
-      { left: "$", right: "$", display: false }
-    ]
-  });
+  if (window.renderMathInElement) {
+    renderMathInElement(container, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false }
+      ]
+    });
+  }
   }
