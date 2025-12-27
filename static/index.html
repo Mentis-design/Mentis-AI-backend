@@ -2,77 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mentis 🧠</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mentis</title>
 
   <!-- MathJax -->
   <script>
     window.MathJax = {
-      tex: {
-        inlineMath: [['$', '$']],
-        displayMath: [['$$', '$$']]
-      }
+      tex: { displayMath: [['$$','$$']], inlineMath: [['$','$']] }
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
-
-  <!-- Markdown -->
-  <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
 
   <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-  <main class="app">
-    <header class="topbar">
-      <h1>Mentis 🧠</h1>
+  <div class="app">
+
+    <header class="top-bar">
+      <h1>Mentis</h1>
       <button id="themeToggle" aria-label="Toggle dark mode">🌙</button>
     </header>
 
-    <section class="card">
+    <main class="card">
       <input
         id="question"
         placeholder="Ask Mentis anything…"
         autocomplete="off"
       />
-      <button class="primary" onclick="askMentis()">Ask Mentis</button>
-    </section>
 
-    <section id="output" class="card output"></section>
-  </main>
+      <button id="askBtn">Ask Mentis</button>
+
+      <div id="answer"></div>
+    </main>
+
+  </div>
 
   <script src="render.js"></script>
-
-  <script>
-    async function askMentis() {
-      const q = document.getElementById("question").value;
-      if (!q) return;
-
-      const res = await fetch("/ask", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: q })
-      });
-
-      const data = await res.json();
-      renderAnswer(data.error ? `**Error:** ${data.error}` : data.answer);
-      MathJax.typesetPromise();
-    }
-
-    // Dark mode toggle
-    const toggle = document.getElementById("themeToggle");
-    toggle.onclick = () => {
-      document.body.classList.toggle("dark");
-      localStorage.setItem(
-        "theme",
-        document.body.classList.contains("dark") ? "dark" : "light"
-      );
-    };
-
-    // Persist theme
-    if (localStorage.getItem("theme") === "dark") {
-      document.body.classList.add("dark");
-    }
-  </script>
 </body>
   </html>
