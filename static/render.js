@@ -1,14 +1,14 @@
-const answerBox = document.getElementById("answer");
 const askBtn = document.getElementById("askBtn");
-const input = document.getElementById("question");
+const answerBox = document.getElementById("answer");
 const toggle = document.getElementById("themeToggle");
 
-// Ask Mentis
-askBtn.onclick = async () => {
-  const q = input.value.trim();
+askBtn.addEventListener("click", askMentis);
+
+async function askMentis() {
+  const q = document.getElementById("question").value.trim();
   if (!q) return;
 
-  answerBox.innerHTML = "<p>Thinking…</p>";
+  answerBox.innerHTML = "Thinking…";
 
   const res = await fetch("/ask", {
     method: "POST",
@@ -17,15 +17,15 @@ askBtn.onclick = async () => {
   });
 
   const data = await res.json();
-  answerBox.innerHTML = data.error || data.answer;
+  answerBox.innerHTML = data.error ? data.error : data.answer;
 
   MathJax.typesetPromise();
-};
+}
 
-// Dark mode toggle
-toggle.onclick = () => {
-  const root = document.documentElement;
-  const dark = root.getAttribute("data-theme") === "dark";
-  root.setAttribute("data-theme", dark ? "light" : "dark");
-  toggle.textContent = dark ? "🌙" : "☀️";
-};
+toggle.addEventListener("click", () => {
+  const current = document.documentElement.getAttribute("data-theme");
+  document.documentElement.setAttribute(
+    "data-theme",
+    current === "dark" ? "light" : "dark"
+  );
+});
