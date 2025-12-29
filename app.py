@@ -14,7 +14,11 @@ def home():
 
 @app.route("/ask", methods=["POST"])
 def ask():
-    question = request.json.get("question", "")
+    data = request.get_json()
+    question = data.get("question", "")
+
+    if not question:
+        return jsonify({"error": "No question provided"}), 400
 
     prompt = f"""
 You are Mentis, a study assistant.
@@ -28,8 +32,18 @@ Question:
 {question}
 """
 
-    response = co.chat(message=prompt)
-    return jsonify({"answer": response.text})
+    try:
+        response = co.chat(
+            model="command-r-plus",
+            message=prompt
+        )
+
+        answer = response.message.content[0].text
+        return jsonify({"answer": answer})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
