@@ -1,79 +1,51 @@
-const steps = [
-  { key: "country", text: "Which country are you studying in?", placeholder: "Country" },
-  { key: "curriculum", text: "Which curriculum?", placeholder: "Cambridge / IB / National" },
-  { key: "goal", text: "What’s your goal?", placeholder: "Study / Exam prep" },
-  { key: "subject", text: "Main subject?", placeholder: "Biology, Maths…" },
-  { key: "deadline", text: "Any deadline?", placeholder: "Optional" }
-];
+const md = window.markdownit({ html:false, linkify:true, breaks:true });
 
-let step = 0;
-let user = JSON.parse(localStorage.getItem("mentis_user")) || {};
+// Dark mode toggle
+const darkToggle = document.getElementById("dark-toggle");
+darkToggle.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+});
 
-const onboarding = document.getElementById("onboarding");
-const home = document.getElementById("home");
+// LocalStorage: continue last session
+const lastQuestion = localStorage.getItem("lastQuestion");
+const lastAnswer = localStorage.getItem("lastAnswer");
 
-function init() {
-  if (!user.country) {
-    showOnboarding();
-  } else {
-    showHome();
-  }
+const continueCard = document.getElementById("continue-card");
+const lastSessionText = document.getElementById("last-session");
+if(lastQuestion && lastAnswer){
+  continueCard.classList.remove("hidden");
+  lastSessionText.textContent = `Last asked: "${lastQuestion}"`;
 }
 
-function showOnboarding() {
-  onboarding.classList.remove("hidden");
-  home.classList.add("hidden");
-  updateStep();
-}
+document.getElementById("resume-btn")?.addEventListener("click", ()=>{
+  document.getElementById("question").value = lastQuestion;
+  renderAnswer(lastAnswer);
+});
 
-function showHome() {
-  onboarding.classList.add("hidden");
-  home.classList.remove("hidden");
-  document.getElementById("lastTopic").innerText =
-    user.lastQuestion || "Ask your first question";
-}
-
-function updateStep() {
-  document.getElementById("stepText").innerText = steps[step].text;
-  document.getElementById("onboardInput").placeholder = steps[step].placeholder;
-  document.getElementById("progressBar").style.width =
-    ((step) / steps.length) * 100 + "%";
-}
-
-function nextStep() {
-  const input = document.getElementById("onboardInput").value;
-  user[steps[step].key] = input;
-  document.getElementById("onboardInput").value = "";
-  step++;
-
-  if (step >= steps.length) {
-    localStorage.setItem("mentis_user", JSON.stringify(user));
-    showHome();
-  } else {
-    updateStep();
-  }
-}
-
-async function askMentis() {
+// Ask Mentis
+document.getElementById("ask-btn").addEventListener("click", async ()=>{
   const q = document.getElementById("question").value;
-  if (!q) return;
-
-  user.lastQuestion = q;
-  localStorage.setItem("mentis_user", JSON.stringify(user));
+  if(!q) return;
 
   const res = await fetch("/ask", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ question: q })
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({ question:q })
   });
 
   const data = await res.json();
-  document.getElementById("answer").innerHTML = data.answer;
+  const answerText = data.error ? "Error: "+data.error : data.answer;
+
+  // Save session
+  localStorage.setItem("lastQuestion", q);
+  localStorage.setItem("lastAnswer", answerText);
+
+  renderAnswer(answerText);
+});
+
+// Render answer with Markdown & Math
+function renderAnswer(raw){
+  const container = document.getElementById("answer");
+  container.innerHTML = md.render(raw);
   MathJax.typesetPromise();
-}
-
-function toggleTheme() {
-  document.body.classList.toggle("dark");
-}
-
-init();
+  }
