@@ -1,55 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mentis 🧠</title>
+<link rel="stylesheet" href="styles.css">
 
 <!-- MathJax -->
 <script>
-window.MathJax = {
-  tex: { displayMath: [['$$','$$']] }
-};
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']] },
+    svg: { fontCache: 'global' }
+  };
 </script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
-
-<link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
-<div id="app">
-
-<!-- ONBOARDING -->
-<section id="onboarding" class="screen">
-  <div class="progress">
-    <div id="progressBar"></div>
-  </div>
-
-  <h1>Welcome to Mentis 🧠</h1>
-  <p id="stepText"></p>
-
-  <input id="onboardInput" placeholder="" />
-  <button onclick="nextStep()">Continue</button>
-</section>
-
-<!-- HOME -->
-<section id="home" class="screen hidden">
+<div class="app-container">
   <header>
     <h1>Mentis 🧠</h1>
-    <button id="themeToggle" onclick="toggleTheme()">🌙</button>
+    <button id="dark-toggle">🌒</button>
   </header>
 
-  <div class="card">
-    <h2>Continue Learning</h2>
-    <p id="lastTopic">Start your first question</p>
+  <div id="home-cards">
+    <div id="continue-card" class="card hidden">
+      <h2>Continue Learning</h2>
+      <p id="last-session"></p>
+      <button id="resume-btn">Resume</button>
+    </div>
   </div>
 
-  <input id="question" placeholder="Ask Mentis anything…" />
-  <button onclick="askMentis()">Ask</button>
+  <div class="question-container">
+    <input type="text" id="question" placeholder="Ask Mentis anything…" />
+    <button id="ask-btn">Ask Mentis</button>
+  </div>
 
   <div id="answer" class="card"></div>
-</section>
-
 </div>
 
 <script src="render.js"></script>
