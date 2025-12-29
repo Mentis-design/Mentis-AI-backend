@@ -1,53 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mentis 🧠</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mentis 🧠</title>
 
-  <!-- MathJax -->
-  <script>
-    window.MathJax = {
-      tex: { displayMath: [['$$','$$']] }
-    };
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<!-- MathJax -->
+<script>
+window.MathJax = {
+  tex: { displayMath: [['$$','$$']] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 
-  <link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
 <div id="app">
 
-  <!-- ONBOARDING -->
-  <section id="onboarding" class="card hidden">
-    <div class="progress">
-      <div id="progress-bar"></div>
-    </div>
+<!-- ONBOARDING -->
+<section id="onboarding" class="screen">
+  <div class="progress">
+    <div id="progressBar"></div>
+  </div>
 
-    <h1>Welcome to Mentis 🧠</h1>
-    <p id="step-text"></p>
+  <h1>Welcome to Mentis 🧠</h1>
+  <p id="stepText"></p>
 
-    <input id="input" placeholder="" />
-    <button onclick="nextStep()">Continue</button>
-  </section>
+  <input id="onboardInput" placeholder="" />
+  <button onclick="nextStep()">Continue</button>
+</section>
 
-  <!-- MAIN APP -->
-  <section id="main" class="hidden">
-    <header>
-      <h1>Mentis 🧠</h1>
-    </header>
+<!-- HOME -->
+<section id="home" class="screen hidden">
+  <header>
+    <h1>Mentis 🧠</h1>
+    <button id="themeToggle" onclick="toggleTheme()">🌙</button>
+  </header>
 
-    <div class="card">
-      <input id="question" placeholder="Ask Mentis anything…" />
-      <button onclick="askMentis()">Ask</button>
-    </div>
+  <div class="card">
+    <h2>Continue Learning</h2>
+    <p id="lastTopic">Start your first question</p>
+  </div>
 
-    <div id="answer" class="card"></div>
-  </section>
+  <input id="question" placeholder="Ask Mentis anything…" />
+  <button onclick="askMentis()">Ask</button>
+
+  <div id="answer" class="card"></div>
+</section>
 
 </div>
 
 <script src="render.js"></script>
 </body>
-        </html>
+  </html>
