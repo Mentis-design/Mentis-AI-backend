@@ -1,253 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Mentis • Get Started</title>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mentis 🧠 - Onboarding</title>
+<link rel="stylesheet" href="styles.css">
 <style>
-:root {
-  --blue: #1F4E79;
-  --teal: #2CB1BC;
-  --yellow: #F5B700;
-  --bg: #F9FAFB;
-  --card: #FFFFFF;
-  --border: #E5E7EB;
-  --text: #111827;
-  --muted: #6B7280;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: Inter, system-ui, -apple-system, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-}
-
-/* Layout */
-.wrapper {
-  max-width: 420px;
-  margin: auto;
-  padding: 24px 16px 40px;
-}
-
-/* Header */
-.logo {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: var(--blue);
-  margin-bottom: 8px;
-}
-
-.subtitle {
-  color: var(--muted);
-  font-size: 0.95rem;
-  margin-bottom: 24px;
-}
-
-/* Progress bar */
-.progress {
-  height: 6px;
-  background: var(--border);
-  border-radius: 999px;
-  overflow: hidden;
-  margin-bottom: 24px;
-}
-
-.progress-bar {
-  height: 100%;
-  width: 0%;
-  background: var(--teal);
-  transition: width 0.3s ease;
-}
-
-/* Card */
-.card {
-  background: var(--card);
-  border-radius: 14px;
-  padding: 22px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
-}
-
-/* Question */
-.question {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 16px;
-}
-
-/* Options */
-.option {
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 14px;
-  margin-bottom: 12px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.option:hover {
-  border-color: var(--teal);
-}
-
-.option.selected {
-  border-color: var(--blue);
-  background: rgba(31, 78, 121, 0.05);
-}
-
-/* Input */
-input {
-  width: 100%;
-  padding: 14px;
-  font-size: 1rem;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-}
-
-/* Button */
-button {
-  margin-top: 18px;
-  width: 100%;
-  padding: 14px;
-  font-size: 1rem;
-  border-radius: 10px;
-  border: none;
-  background: var(--blue);
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
+  body { font-family: Inter, Arial, sans-serif; background: #F9FAFB; margin:0; padding:20px; color:#111827; }
+  .container { max-width: 500px; margin: auto; display:flex; flex-direction:column; gap:20px; }
+  h1 { font-size:2rem; text-align:center; margin-bottom:20px; color:#1F4E79; }
+  .progress-bar { height: 8px; background:#E5E7EB; border-radius:4px; overflow:hidden; margin-bottom:20px; }
+  .progress-bar-inner { height:100%; width:0%; background:#2CB1BC; transition: width 0.3s ease; }
+  .step { display:flex; flex-direction:column; gap:12px; }
+  input, select { padding:10px; font-size:16px; border-radius:6px; border:1px solid #ccc; width:100%; }
+  button { padding:12px; font-size:16px; border-radius:8px; border:none; background:#1F4E79; color:white; cursor:pointer; }
+  button:hover { background:#163B60; }
 </style>
 </head>
-
 <body>
-<div class="wrapper">
-
-  <div class="logo">Mentis 🧠</div>
-  <div class="subtitle">Let’s personalize your learning</div>
-
-  <div class="progress">
-    <div class="progress-bar" id="progressBar"></div>
-  </div>
-
-  <div class="card" id="card"></div>
-
+<div class="container">
+  <h1>Welcome to Mentis 🧠</h1>
+  <div class="progress-bar"><div class="progress-bar-inner" id="progress"></div></div>
+  <div id="step-container" class="step"></div>
+  <button id="next-btn">Continue</button>
 </div>
 
 <script>
 const steps = [
-  {
-    key: "country",
-    question: "Which country are you studying in?",
-    options: ["South Africa", "United Kingdom", "United States", "Other"]
-  },
-  {
-    key: "goal",
-    question: "What are you using Mentis for?",
-    options: ["Studying daily", "Exam preparation", "Understanding a subject", "Revision"]
-  },
-  {
-    key: "subject",
-    question: "What subject do you want help with?",
-    input: true,
-    placeholder: "e.g. Mathematics, Biology, Physics"
-  },
-  {
-    key: "deadline",
-    question: "Do you have a deadline?",
-    options: ["No deadline", "In a week", "In a month", "Custom date"]
-  }
+  { question: "Which country are you in?", type: "text", key: "country" },
+  { question: "Which curriculum?", type: "text", key: "curriculum" },
+  { question: "What is your goal?", type: "text", key: "goal" },
+  { question: "Which subject?", type: "text", key: "subject" },
+  { question: "How long until your deadline?", type: "text", key: "deadline" }
 ];
 
-let stepIndex = 0;
-let answers = JSON.parse(localStorage.getItem("mentis_onboarding")) || {};
-
-const card = document.getElementById("card");
-const progressBar = document.getElementById("progressBar");
-
-function updateProgress() {
-  progressBar.style.width = ((stepIndex) / steps.length) * 100 + "%";
-}
+let currentStep = 0;
+const answers = JSON.parse(localStorage.getItem("mentisOnboarding") || "{}");
 
 function renderStep() {
-  updateProgress();
-  const step = steps[stepIndex];
-  card.innerHTML = "";
+  const container = document.getElementById("step-container");
+  container.innerHTML = "";
+  const step = steps[currentStep];
+  const label = document.createElement("label");
+  label.textContent = step.question;
+  let input;
+  if(step.type==="text") input = document.createElement("input");
+  else if(step.type==="select") input = document.createElement("select");
+  input.id = "answer";
+  input.value = answers[step.key] || "";
+  container.appendChild(label);
+  container.appendChild(input);
 
-  const q = document.createElement("div");
-  q.className = "question";
-  q.textContent = step.question;
-  card.appendChild(q);
-
-  if (step.options) {
-    step.options.forEach(opt => {
-      const div = document.createElement("div");
-      div.className = "option";
-      div.textContent = opt;
-
-      if (answers[step.key] === opt) div.classList.add("selected");
-
-      div.onclick = () => {
-        answers[step.key] = opt;
-        saveAndNext();
-      };
-
-      card.appendChild(div);
-    });
-  }
-
-  if (step.input) {
-    const input = document.createElement("input");
-    input.placeholder = step.placeholder;
-    input.value = answers[step.key] || "";
-    card.appendChild(input);
-
-    const btn = document.createElement("button");
-    btn.textContent = "Continue";
-    btn.disabled = !input.value.trim();
-
-    input.oninput = () => btn.disabled = !input.value.trim();
-
-    btn.onclick = () => {
-      answers[step.key] = input.value.trim();
-      saveAndNext();
-    };
-
-    card.appendChild(btn);
-  }
+  const progress = document.getElementById("progress");
+  progress.style.width = `${((currentStep)/steps.length)*100}%`;
 }
 
-function saveAndNext() {
-  localStorage.setItem("mentis_onboarding", JSON.stringify(answers));
-  stepIndex++;
-
-  if (stepIndex >= steps.length) {
-    progressBar.style.width = "100%";
-    card.innerHTML = `
-      <div class="question">You're all set 🎉</div>
-      <p style="color: var(--muted)">Mentis is ready to help you learn smarter.</p>
-      <button onclick="finish()">Go to Mentis</button>
-    `;
+document.getElementById("next-btn").addEventListener("click", ()=>{
+  const step = steps[currentStep];
+  const val = document.getElementById("answer").value;
+  if(val.trim()==="") return alert("Please enter a value");
+  answers[step.key]=val;
+  localStorage.setItem("mentisOnboarding", JSON.stringify(answers));
+  currentStep++;
+  if(currentStep>=steps.length){
+    window.location.href="/index.html";
     return;
   }
-
   renderStep();
-}
-
-function finish() {
-  window.location.href = "/"; // later: home/dashboard
-}
+});
 
 renderStep();
 </script>
 </body>
-</html>
+                              </html>
