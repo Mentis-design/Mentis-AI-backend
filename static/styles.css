@@ -5,92 +5,74 @@
   --bg: #F9FAFB;
   --card: #FFFFFF;
   --text: #111827;
-  --muted: #6B7280;
-}
-
-* {
-  box-sizing: border-box;
 }
 
 body {
   margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
   background: var(--bg);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont;
   color: var(--text);
 }
 
 #app {
-  min-height: 100vh;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
+  max-width: 420px;
+  margin: auto;
+  padding: 16px;
 }
 
-section {
-  width: 100%;
-  max-width: 480px;
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .hidden {
   display: none;
 }
 
-header {
-  text-align: center;
-  margin-bottom: 16px;
-}
-
-.card {
-  background: var(--card);
-  border-radius: 14px;
-  padding: 20px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-  margin-bottom: 16px;
-}
-
 h1 {
-  margin: 0 0 10px;
-}
-
-p {
-  color: var(--muted);
+  font-size: 1.8rem;
+  margin: 0;
 }
 
 input {
-  width: 100%;
   padding: 14px;
-  margin-top: 12px;
+  font-size: 1rem;
   border-radius: 10px;
-  border: 1px solid #E5E7EB;
-  font-size: 16px;
+  border: 1px solid #ddd;
 }
 
 button {
-  width: 100%;
-  margin-top: 14px;
   padding: 14px;
   border-radius: 10px;
   border: none;
   background: var(--blue);
   color: white;
-  font-size: 16px;
+  font-size: 1rem;
 }
 
-button:active {
-  transform: scale(0.98);
+.card {
+  background: var(--card);
+  padding: 16px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
 }
 
 .progress {
   height: 6px;
-  background: #E5E7EB;
-  border-radius: 999px;
-  overflow: hidden;
-  margin-bottom: 20px;
+  background: #e5e7eb;
+  border-radius: 4px;
 }
 
-#progress-bar {
+#progressBar {
   height: 100%;
   width: 0%;
   background: var(--teal);
-  transition: width 0.3s ease;
-  }
+  border-radius: 4px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+    }
