@@ -14,29 +14,28 @@ def home():
 
 @app.route("/ask", methods=["POST"])
 def ask():
-    data = request.get_json()
+    data = request.get_json(force=True)
     question = data.get("question", "").strip()
 
     if not question:
-        return jsonify({"error": "Empty question"}), 400
+        return jsonify({"error": "No question provided"}), 400
 
     prompt = f"""
-You are Mentis, a study assistant.
+You are Mentis, a calm and professional study assistant.
 
-Formatting rules:
+Rules:
 - Use LaTeX ONLY inside $$ blocks
 - Only include equations when necessary
 - Do NOT repeat equations
 - Write explanations in normal text
+- Use clean paragraphs and bullet points
 
 Question:
 {question}
 """
 
     try:
-        response = co.chat(
-            message=prompt
-        )
+        response = co.chat(message=prompt)
         return jsonify({"answer": response.text})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
