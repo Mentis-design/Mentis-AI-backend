@@ -1,29 +1,33 @@
-console.log("render.js loaded ✅");
+const askBtn = document.getElementById("askBtn");
+const input = document.getElementById("questionInput");
+const answerBox = document.getElementById("answerBox");
+const themeToggle = document.getElementById("themeToggle");
 
-document.getElementById("ask-btn").addEventListener("click", async () => {
-  console.log("Ask button clicked");
+askBtn.addEventListener("click", askMentis);
 
-  const q = document.getElementById("question").value;
-  if (!q) {
-    alert("No question typed");
-    return;
-  }
+async function askMentis() {
+  const question = input.value.trim();
+  if (!question) return;
+
+  answerBox.innerHTML = "Thinking…";
 
   try {
     const res = await fetch("/ask", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question: q })
+      body: JSON.stringify({ question })
     });
 
-    console.log("Response status:", res.status);
-
     const data = await res.json();
-    console.log("Response JSON:", data);
+    answerBox.innerHTML = data.answer;
 
-    document.getElementById("answer").innerText = data.answer || data.error;
-  } catch (e) {
-    alert("FETCH FAILED ❌");
-    console.error(e);
+    MathJax.typesetPromise();
+  } catch (err) {
+    answerBox.innerHTML = "Error talking to Mentis.";
   }
+}
+
+/* Dark mode */
+themeToggle.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
 });
