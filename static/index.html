@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mentis 🧠</title>
 
   <!-- MathJax -->
@@ -15,30 +16,23 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-  <div class="app">
+  <header class="top-bar">
+    <h1>Mentis 🧠</h1>
+    <button id="themeToggle">🌒</button>
+  </header>
 
-    <header class="top-bar">
-      <h1>Mentis 🧠</h1>
-      <button id="themeToggle">🌒</button>
-    </header>
+  <main class="container">
+    <input id="questionInput" placeholder="Ask Mentis anything…" />
+    <button id="askBtn">Ask Mentis</button>
 
-    <main class="content">
-      <input
-        id="questionInput"
-        placeholder="Ask Mentis anything…"
-      />
-
-      <button id="askBtn">Ask Mentis</button>
-
-      <div id="answerBox"></div>
-    </main>
-
-  </div>
+    <div id="answerBox"></div>
+  </main>
 
   <script src="render.js"></script>
+  <script src="app.js"></script>
 </body>
-                                                                          </html>
+  </html>
