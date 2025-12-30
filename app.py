@@ -12,19 +12,24 @@ co = cohere.Client(os.environ.get("COHERE_API_KEY"))
 def home():
     return send_from_directory("static", "index.html")
 
+@app.route("/onboarding")
+def onboarding():
+    return send_from_directory("static", "onboarding.html")
+
 @app.route("/ask", methods=["POST"])
 def ask():
     data = request.get_json()
-    question = data.get("question", "")
+    question = data.get("question", "").strip()
 
     if not question:
-        return jsonify({"error": "No question provided"}), 400
+        return jsonify({"error": "Empty question"}), 400
 
     prompt = f"""
 You are Mentis, a study assistant.
 
 Rules:
 - Use LaTeX ONLY inside $$ blocks
+- Only include equations when necessary
 - Do NOT repeat equations
 - Write explanations in normal text
 
@@ -33,14 +38,8 @@ Question:
 """
 
     try:
-        response = co.chat(
-            model="command-r-plus",
-            message=prompt
-        )
-
-        answer = response.message.content[0].text
-        return jsonify({"answer": answer})
-
+        response = co.chat(message=prompt)
+        return jsonify({"answer": response.text})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
