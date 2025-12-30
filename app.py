@@ -12,10 +12,6 @@ co = cohere.Client(os.environ.get("COHERE_API_KEY"))
 def home():
     return send_from_directory("static", "index.html")
 
-@app.route("/onboarding")
-def onboarding():
-    return send_from_directory("static", "onboarding.html")
-
 @app.route("/ask", methods=["POST"])
 def ask():
     data = request.get_json()
@@ -27,7 +23,7 @@ def ask():
     prompt = f"""
 You are Mentis, a study assistant.
 
-Rules:
+Formatting rules:
 - Use LaTeX ONLY inside $$ blocks
 - Only include equations when necessary
 - Do NOT repeat equations
@@ -38,7 +34,9 @@ Question:
 """
 
     try:
-        response = co.chat(message=prompt)
+        response = co.chat(
+            message=prompt
+        )
         return jsonify({"answer": response.text})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
