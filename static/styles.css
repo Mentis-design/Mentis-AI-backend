@@ -226,3 +226,54 @@ body {
     font-size: 16.5px;
   }
   }
+/* =========================
+   Mentis Answer Formatting
+   FINAL FIX
+   ========================= */
+
+/* Answer card spacing */
+#answer {
+  font-size: 16px;
+  line-height: 1.75;
+  padding: 22px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Paragraph spacing */
+#answer p {
+  margin: 0 0 14px 0;
+}
+
+/* Improve Markdown-style lists */
+#answer ul,
+#answer ol {
+  margin: 12px 0 18px 20px;
+  padding-left: 18px;
+}
+
+#answer li {
+  margin-bottom: 8px;
+}
+
+/* Fake headings (bold lines) */
+#answer strong {
+  display: block;
+  margin-top: 14px;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+/* MathJax – keep equations inside card */
+#answer mjx-container {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 8px 0;
+}
+
+/* Prevent page horizontal scroll */
+body {
+  overflow-x: hidden;
+}
