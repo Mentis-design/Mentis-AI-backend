@@ -164,3 +164,65 @@ textarea {
 body {
   overflow-x: hidden;
 }
+/* =========================
+   Mentis Answer – FINAL POLISH
+   ========================= */
+
+/* Card containment fix */
+#answer {
+  background: var(--card-bg, #ffffff);
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 20px;
+  overflow: hidden; /* 🔑 keeps equations inside card */
+}
+
+/* Headings inside answers */
+#answer strong {
+  display: block;
+  font-size: 17px;
+  margin-top: 18px;
+  margin-bottom: 6px;
+  color: var(--text-primary, #111827);
+}
+
+/* Lists – clear structure */
+#answer ul,
+#answer ol {
+  margin: 12px 0 18px 18px;
+  padding-left: 14px;
+}
+
+#answer li {
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+/* Paragraph spacing */
+#answer p {
+  margin-bottom: 14px;
+}
+
+/* MathJax – mobile-safe INSIDE card */
+#answer mjx-container {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 6px 0;
+}
+
+/* Prevent equations from touching card edges */
+#answer mjx-container[jax="CHTML"][display="true"] {
+  margin: 12px 0;
+}
+
+/* Improve readability on mobile */
+@media (max-width: 600px) {
+  #answer {
+    font-size: 15.5px;
+  }
+
+  #answer strong {
+    font-size: 16.5px;
+  }
+  }
