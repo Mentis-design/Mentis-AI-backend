@@ -2,47 +2,178 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
 <title>Mentis 🧠</title>
 
 <!-- MathJax -->
 <script>
-window.MathJax = {
-  tex: {
-    inlineMath: [['$', '$']],
-    displayMath: [['$$', '$$']]
-  }
-};
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$']],
+      displayMath: [['$$', '$$']]
+    }
+  };
 </script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 
-<!-- Markdown -->
-<script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+<style>
+/* =====================
+   COLOR SYSTEM
+===================== */
+:root {
+  --bg: #F9FAFB;
+  --card: #FFFFFF;
+  --text: #111827;
+  --muted: #6B7280;
+  --primary: #1F4E79;
+  --accent: #2CB1BC;
+  --border: #E5E7EB;
+}
 
-<link rel="stylesheet" href="styles.css" />
+body.dark {
+  --bg: #0F172A;
+  --card: #1E293B;
+  --text: #E5E7EB;
+  --muted: #9CA3AF;
+  --border: #334155;
+}
+
+/* =====================
+   BASE
+===================== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* =====================
+   LAYOUT
+===================== */
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+header h1 {
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+.toggle {
+  font-size: 1.2rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* =====================
+   CARD
+===================== */
+.card {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  margin-bottom: 16px;
+}
+
+/* =====================
+   INPUT
+===================== */
+textarea {
+  width: 100%;
+  min-height: 70px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  font-size: 1rem;
+  resize: none;
+  background: var(--bg);
+  color: var(--text);
+}
+
+button {
+  width: 100%;
+  margin-top: 12px;
+  padding: 14px;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: none;
+  background: var(--primary);
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.95;
+}
+
+/* =====================
+   ANSWER
+===================== */
+#answer {
+  line-height: 1.65;
+}
+
+#answer p {
+  margin-bottom: 12px;
+}
+
+#answer ul {
+  padding-left: 20px;
+  margin-bottom: 12px;
+}
+
+#answer li {
+  margin-bottom: 6px;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+</style>
 </head>
 
 <body>
-<header class="top-bar">
-  <h1>Mentis 🧠</h1>
-  <button id="themeToggle" aria-label="Toggle dark mode">🌒</button>
-</header>
+<div class="app">
 
-<main class="container">
-  <section class="card">
-    <label for="question" class="label">Ask Mentis</label>
-    <textarea id="question" placeholder="What is photosynthesis?" rows="3"></textarea>
-    <button class="primary" onclick="askMentis()">Ask Mentis</button>
-  </section>
+  <header>
+    <h1>Mentis 🧠</h1>
+    <div class="toggle" onclick="toggleDark()">🌒</div>
+  </header>
 
-  <section id="answerCard" class="card hidden">
-    <div id="output"></div>
-  </section>
-</main>
+  <div class="card">
+    <div class="muted">Ask Mentis</div>
+    <textarea id="question" placeholder="What is photosynthesis?"></textarea>
+    <button onclick="askMentis()">Ask Mentis</button>
+  </div>
 
-<script src="render.js"></script>
+  <div class="card">
+    <div id="answer" class="muted">Your answer will appear here.</div>
+  </div>
+
+</div>
 
 <script>
+function toggleDark() {
+  document.body.classList.toggle("dark");
+}
+
 async function askMentis() {
   const q = document.getElementById("question").value.trim();
   if (!q) return;
@@ -54,18 +185,17 @@ async function askMentis() {
   });
 
   const data = await res.json();
-  const card = document.getElementById("answerCard");
-  const out = document.getElementById("output");
+  const out = document.getElementById("answer");
 
-  card.classList.remove("hidden");
-  out.innerHTML = data.error ? data.error : renderAnswer(data.answer);
+  if (data.error) {
+    out.innerText = "Error: " + data.error;
+    return;
+  }
 
+  out.innerHTML = data.answer;
   MathJax.typesetPromise();
 }
-
-document.getElementById("themeToggle").onclick = () => {
-  document.body.classList.toggle("dark");
-};
 </script>
+
 </body>
   </html>
