@@ -107,7 +107,7 @@ textarea {
 
 #answer {
   font-size: 16px;
-  line-height: 1.7;
+  line-height: 1.75;
   padding: 20px;
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -115,28 +115,52 @@ textarea {
 
 /* Paragraph spacing */
 #answer p {
-  margin-bottom: 14px;
+  margin-bottom: 16px;
+}
+
+/* Bold lines often act like headings */
+#answer strong {
+  display: block;
+  margin-top: 18px;
+  margin-bottom: 6px;
+  font-weight: 600;
 }
 
 /* Bullet & numbered lists */
 #answer ul,
 #answer ol {
-  margin: 12px 0 16px 20px;
+  margin: 12px 0 18px 22px;
   padding-left: 16px;
 }
 
 #answer li {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
-/* Equations – mobile-safe */
+/* Inline code / emphasis */
+#answer code {
+  background: rgba(0,0,0,0.05);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* =========================
+   MathJax – keep equations inside card
+   ========================= */
+
 #answer mjx-container {
   max-width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
+  padding-bottom: 6px;
+}
+
+/* Center display equations nicely */
+#answer mjx-container[display="true"] {
+  text-align: center;
 }
 
 /* Prevent horizontal scrolling on page */
 body {
   overflow-x: hidden;
-  }
+}
