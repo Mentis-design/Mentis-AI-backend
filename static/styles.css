@@ -101,3 +101,42 @@ textarea {
     padding: 32px;
   }
   }
+/* =========================
+   Mentis Answer Formatting
+   ========================= */
+
+#answer {
+  font-size: 16px;
+  line-height: 1.7;
+  padding: 20px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Paragraph spacing */
+#answer p {
+  margin-bottom: 14px;
+}
+
+/* Bullet & numbered lists */
+#answer ul,
+#answer ol {
+  margin: 12px 0 16px 20px;
+  padding-left: 16px;
+}
+
+#answer li {
+  margin-bottom: 8px;
+}
+
+/* Equations – mobile-safe */
+#answer mjx-container {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* Prevent horizontal scrolling on page */
+body {
+  overflow-x: hidden;
+  }
