@@ -277,3 +277,79 @@ body {
 body {
   overflow-x: hidden;
 }
+/* =========================
+   Mentis Answer Formatting
+   ========================= */
+
+#answer {
+  font-size: 16px;
+  line-height: 1.7;
+  padding: 20px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  background: var(--card);
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  margin-bottom: 16px;
+}
+
+/* Paragraph spacing */
+#answer p {
+  margin-bottom: 14px;
+}
+
+/* Headings inside answers */
+#answer h1,
+#answer h2,
+#answer h3,
+#answer h4,
+#answer h5,
+#answer h6 {
+  margin: 16px 0 8px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+/* Bullet & numbered lists */
+#answer ul,
+#answer ol {
+  margin: 12px 0 16px 20px;
+  padding-left: 16px;
+}
+
+#answer li {
+  margin-bottom: 8px;
+}
+
+/* Inline code or bold text spacing */
+#answer strong,
+#answer em,
+#answer code {
+  margin: 0 2px;
+}
+
+/* Equations – mobile-safe scrolling */
+#answer mjx-container {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  display: block;
+  margin: 12px 0;
+  padding: 4px 0;
+}
+
+/* Prevent horizontal scrolling on page */
+body {
+  overflow-x: hidden;
+}
+
+/* Optional: muted text inside answers */
+#answer .muted {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* Add spacing between multiple answers if needed */
+.card + #answer {
+  margin-top: 12px;
+    }
