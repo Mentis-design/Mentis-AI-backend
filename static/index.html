@@ -98,17 +98,16 @@ async function askMentis() {
   });
 
   const data = await res.json();
-  const out = document.getElementById("answer");
 
   if (data.error) {
-    out.innerText = "Error: " + data.error;
+    document.getElementById("answer").innerText = "Error: " + data.error;
     return;
   }
 
-  out.innerHTML = data.answer;
-  MathJax.typesetPromise();
+  // ✅ CORRECT renderer
+  renderAnswer(data.answer);
 }
-</script>
+  </script>
 <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
 <script src="/static/render.js"></script>
 </body>
