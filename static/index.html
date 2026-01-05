@@ -17,7 +17,154 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 
-<style>
+<style><style>
+/* =====================
+   COLOR SYSTEM
+===================== */
+:root {
+  --bg: #F9FAFB;
+  --card: #FFFFFF;
+  --text: #111827;
+  --muted: #6B7280;
+  --primary: #1F4E79;
+  --accent: #2CB1BC;
+  --border: #E5E7EB;
+}
+
+body.dark {
+  --bg: #0F172A;
+  --card: #1E293B;
+  --text: #E5E7EB;
+  --muted: #9CA3AF;
+  --border: #334155;
+}
+
+/* =====================
+   BASE
+===================== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* =====================
+   LAYOUT
+===================== */
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+header h1 {
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+.toggle {
+  font-size: 1.2rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* =====================
+   CARD
+===================== */
+.card {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+}
+
+/* =====================
+   INPUT
+===================== */
+textarea {
+  width: 100%;
+  min-height: 70px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  font-size: 1rem;
+  background: var(--bg);
+  color: var(--text);
+  resize: none;
+}
+
+button {
+  width: 100%;
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  background: var(--primary);
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.95;
+}
+
+/* =====================
+   MENTIS ANSWER FORMATTING
+===================== */
+#answer {
+  font-size: 16px;
+  line-height: 1.7;
+  padding: 12px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  overflow-x: auto; /* Allows horizontal scroll for long equations */
+}
+
+/* Paragraph spacing */
+#answer p {
+  margin-bottom: 14px;
+}
+
+/* Bullet & numbered lists */
+#answer ul,
+#answer ol {
+  margin: 12px 0 16px 20px;
+  padding-left: 16px;
+}
+
+#answer li {
+  margin-bottom: 8px;
+}
+
+/* Equations – mobile safe */
+#answer mjx-container {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* =====================
+   MUTED TEXT
+===================== */
+.muted {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+  </style>
 /* =========================
    MENTIS ANSWER FORMATTING START
 ========================= */
