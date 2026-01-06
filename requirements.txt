@@ -1,7 +1,15 @@
+# Server
 flask
 flask-cors
-cohere
 gunicorn
-google
+
+# AI SDKs
+openai                # For OpenAI API
+cohere                # For Cohere API
+huggingface_hub       # For Hugging Face API
+groq                  # For Groq API
+google-generativeai   # For Gemini API (Google Generative AI)
+
+# Authentication & utilities
 google-auth
 google-api-python-client
