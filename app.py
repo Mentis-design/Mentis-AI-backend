@@ -3,7 +3,12 @@ import requests
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import cohere
-import google.generativeai as genai
+
+# Gemini SDK
+try:
+    import google.generativeai as genai
+except ImportError:
+    genai = None  # Will skip if not installed
 
 app = Flask(__name__, static_folder="static")
 CORS(app)
@@ -16,17 +21,21 @@ COHERE_API_KEY = os.getenv("COHERE_API_KEY")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 HF_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
 
+# ======================
+# INITIALIZE PROVIDERS
+# ======================
 co = cohere.Client(COHERE_API_KEY) if COHERE_API_KEY else None
 
-if GEMINI_API_KEY:
+gemini_model = None
+if GEMINI_API_KEY and genai:
     genai.configure(api_key=GEMINI_API_KEY)
-    gemini_model = genai.GenerativeModel("gemini-pro")
-else:
-    gemini_model = None
-
+    try:
+        gemini_model = genai.GenerativeModel("gemini-pro")
+    except Exception as e:
+        print("Gemini initialization failed:", e)
 
 # ======================
-# PROMPT
+# PROMPT BUILDER
 # ======================
 def build_prompt(question: str) -> str:
     return f"""
@@ -57,14 +66,12 @@ QUESTION:
 {question}
 """.strip()
 
-
 # ======================
-# PROVIDERS
+# AI PROVIDER FUNCTIONS
 # ======================
 def ask_groq(prompt):
     if not GROQ_API_KEY:
         raise Exception("Groq key missing")
-
     res = requests.post(
         "https://api.groq.com/openai/v1/chat/completions",
         headers={
@@ -78,42 +85,49 @@ def ask_groq(prompt):
         },
         timeout=15
     )
-
     res.raise_for_status()
-    return res.json()["choices"][0]["message"]["content"]
-
+    data = res.json()
+    return data.get("choices", [{}])[0].get("message", {}).get("content", "")
 
 def ask_cohere(prompt):
     if not co:
         raise Exception("Cohere key missing")
-
-    res = co.chat(message=prompt)
-    return res.text
-
+    try:
+        res = co.chat(message=prompt)
+        return getattr(res, "text", getattr(res, "output_text", ""))
+    except Exception as e:
+        raise Exception(f"Cohere error: {e}")
 
 def ask_gemini(prompt):
     if not gemini_model:
-        raise Exception("Gemini key missing")
-
-    res = gemini_model.generate_content(prompt)
-    return res.text
-
+        raise Exception("Gemini key missing or not initialized")
+    try:
+        res = gemini_model.generate_content(prompt)
+        # Safe handling for different response structures
+        return getattr(res, "text", getattr(res, "output_text", res.output[0].content[0].text if hasattr(res, "output") else ""))
+    except Exception as e:
+        raise Exception(f"Gemini error: {e}")
 
 def ask_huggingface(prompt):
     if not HF_API_KEY:
-        raise Exception("HF key missing")
-
-    res = requests.post(
-        "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2",
-        headers={"Authorization": f"Bearer {HF_API_KEY}"},
-        json={"inputs": prompt},
-        timeout=30
-    )
-
-    res.raise_for_status()
-    data = res.json()
-    return data[0]["generated_text"]
-
+        raise Exception("HuggingFace key missing")
+    try:
+        res = requests.post(
+            "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2",
+            headers={"Authorization": f"Bearer {HF_API_KEY}"},
+            json={"inputs": prompt},
+            timeout=30
+        )
+        res.raise_for_status()
+        data = res.json()
+        if isinstance(data, list) and "generated_text" in data[0]:
+            return data[0]["generated_text"]
+        elif isinstance(data, dict) and "generated_text" in data:
+            return data["generated_text"]
+        else:
+            raise Exception("HF returned unexpected format")
+    except Exception as e:
+        raise Exception(f"HuggingFace error: {e}")
 
 # ======================
 # ROUTES
@@ -121,7 +135,6 @@ def ask_huggingface(prompt):
 @app.route("/")
 def home():
     return send_from_directory("static", "index.html")
-
 
 @app.route("/ask", methods=["POST"])
 def ask():
@@ -133,6 +146,7 @@ def ask():
 
     prompt = build_prompt(question)
 
+    # Priority order: Groq → Cohere → Gemini → HF
     providers = [
         ("Groq", ask_groq),
         ("Cohere", ask_cohere),
@@ -141,19 +155,20 @@ def ask():
     ]
 
     errors = []
-
     for name, provider in providers:
         try:
             answer = provider(prompt)
-            return jsonify({"answer": answer})
+            if answer:
+                return jsonify({"answer": answer})
         except Exception as e:
-            errors.append(f"{name}: {str(e)}")
+            print(f"{name} failed:", e)
+            errors.append(f"{name}: {e}")
 
+    # All providers failed
     return jsonify({
         "error": "All AI providers failed",
         "details": errors
     }), 500
-
 
 # ======================
 # RUN
