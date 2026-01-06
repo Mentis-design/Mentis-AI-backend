@@ -2,109 +2,127 @@ import os
 import requests
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
+import cohere
+import google.generativeai as genai
 
 app = Flask(__name__, static_folder="static")
 CORS(app)
 
-# =====================
+# ======================
 # API KEYS
-# =====================
-GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
-COHERE_API_KEY = os.environ.get("COHERE_API_KEY")
-HF_API_KEY = os.environ.get("HF_API_KEY")
+# ======================
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+COHERE_API_KEY = os.getenv("COHERE_API_KEY")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+HF_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
 
-# =====================
-# HOME
-# =====================
-@app.route("/")
-def home():
-    return send_from_directory("static", "index.html")
+co = cohere.Client(COHERE_API_KEY) if COHERE_API_KEY else None
 
-# =====================
+if GEMINI_API_KEY:
+    genai.configure(api_key=GEMINI_API_KEY)
+    gemini_model = genai.GenerativeModel("gemini-pro")
+else:
+    gemini_model = None
+
+
+# ======================
+# PROMPT
+# ======================
+def build_prompt(question: str) -> str:
+    return f"""
+You are Mentis 🧠, a clean, mobile-first study assistant.
+
+RULES FOR ANSWERS:
+- Use clear headings
+- Short paragraphs
+- Bullet points (each on its own line)
+- Numbered steps when appropriate
+- NEVER put equations inline
+- Equations must be on their own line using $$ if needed
+- No clutter, no emojis
+
+FORMAT:
+
+Title
+
+Explanation paragraph
+
+- Bullet
+- Bullet
+
+1. Step
+2. Step
+
+QUESTION:
+{question}
+""".strip()
+
+
+# ======================
 # PROVIDERS
-# =====================
-
+# ======================
 def ask_groq(prompt):
     if not GROQ_API_KEY:
-        return None
+        raise Exception("Groq key missing")
 
-    payload = {
-        "messages": [{"role": "user", "content": prompt}],
-        "temperature": 0.4
-    }
-
-    # Groq automatically routes to best available model
-    headers = {
-        "Authorization": f"Bearer {GROQ_API_KEY}",
-        "Content-Type": "application/json"
-    }
-
-    r = requests.post(
+    res = requests.post(
         "https://api.groq.com/openai/v1/chat/completions",
-        headers=headers,
-        json={**payload, "model": "auto"},
-        timeout=12
-    )
-
-    if r.status_code == 200:
-        return r.json()["choices"][0]["message"]["content"]
-
-    return None
-
-
-def ask_cohere(prompt):
-    if not COHERE_API_KEY:
-        return None
-
-    r = requests.post(
-        "https://api.cohere.ai/v1/chat",
         headers={
-            "Authorization": f"Bearer {COHERE_API_KEY}",
+            "Authorization": f"Bearer {GROQ_API_KEY}",
             "Content-Type": "application/json"
         },
         json={
-            # Cohere routes internally to best Command model
-            "message": prompt,
+            "model": "llama3-70b-8192",
+            "messages": [{"role": "user", "content": prompt}],
             "temperature": 0.4
         },
         timeout=15
     )
 
-    if r.status_code == 200:
-        return r.json().get("text")
+    res.raise_for_status()
+    return res.json()["choices"][0]["message"]["content"]
 
-    return None
+
+def ask_cohere(prompt):
+    if not co:
+        raise Exception("Cohere key missing")
+
+    res = co.chat(message=prompt)
+    return res.text
+
+
+def ask_gemini(prompt):
+    if not gemini_model:
+        raise Exception("Gemini key missing")
+
+    res = gemini_model.generate_content(prompt)
+    return res.text
 
 
 def ask_huggingface(prompt):
     if not HF_API_KEY:
-        return None
+        raise Exception("HF key missing")
 
-    # HF auto-selects best compatible model via inference routing
-    r = requests.post(
-        "https://api-inference.huggingface.co/models/text-generation",
-        headers={
-            "Authorization": f"Bearer {HF_API_KEY}",
-            "Content-Type": "application/json"
-        },
-        json={
-            "inputs": prompt,
-            "parameters": {
-                "temperature": 0.4,
-                "max_new_tokens": 700
-            }
-        },
-        timeout=20
+    res = requests.post(
+        "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2",
+        headers={"Authorization": f"Bearer {HF_API_KEY}"},
+        json={"inputs": prompt},
+        timeout=30
     )
 
-    if r.status_code == 200 and isinstance(r.json(), list):
-        return r.json()[0].get("generated_text")
+    res.raise_for_status()
+    data = res.json()
+    return data[0]["generated_text"]
 
-    return None
 
-# =====================
-# ASK ROUTE
-# =====================
+# ======================
+# ROUTES
+# ======================
+@app.route("/")
+def home():
+    return send_from_directory("static", "index.html")
+
+
 @app.route("/ask", methods=["POST"])
 def ask():
     data = request.get_json(force=True)
@@ -113,39 +131,33 @@ def ask():
     if not question:
         return jsonify({"error": "No question provided"}), 400
 
-    prompt = f"""
-You are Mentis 🧠, a clean, mobile-first study assistant.
+    prompt = build_prompt(question)
 
-RULES FOR ANSWERS:
-- Use clear headings
-- Short readable paragraphs
-- Proper bullet points (one per line)
-- Numbered steps when sequential
-- NEVER inline equations
-- Equations must be on their own line using $$ $$
+    providers = [
+        ("Groq", ask_groq),
+        ("Cohere", ask_cohere),
+        ("Gemini", ask_gemini),
+        ("HuggingFace", ask_huggingface),
+    ]
 
-QUESTION:
-{question}
-"""
+    errors = []
 
-    try:
-        answer = (
-            ask_groq(prompt)
-            or ask_cohere(prompt)
-            or ask_huggingface(prompt)
-        )
+    for name, provider in providers:
+        try:
+            answer = provider(prompt)
+            return jsonify({"answer": answer})
+        except Exception as e:
+            errors.append(f"{name}: {str(e)}")
 
-        if not answer:
-            return jsonify({"error": "All AI providers failed"}), 503
+    return jsonify({
+        "error": "All AI providers failed",
+        "details": errors
+    }), 500
 
-        return jsonify({"answer": answer})
 
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-# =====================
+# ======================
 # RUN
-# =====================
+# ======================
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
