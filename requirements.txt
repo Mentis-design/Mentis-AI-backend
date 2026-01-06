@@ -1,6 +1,7 @@
 flask
 flask-cors
-gunicorn
-requests
 cohere
-google-generativeai
+gunicorn
+google
+google-auth
+google-api-python-client
