@@ -222,7 +222,209 @@ export const grade8MathLessons = [
         ]
       }
     ]
-  },
+  },// --- SNIPPET 2 START ---
+{
+  question: "Multiply 12 × 8 mentally.",
+  options: ["96", "88", "108", "92"],
+  correctIndex: 0,
+  explanation: "12 × 8 = 96.",
+  subQuestions: [
+    {
+      question: "Multiply 15 × 6 mentally.",
+      options: ["80", "90", "100", "95"],
+      correctIndex: 1,
+      explanation: "15 × 6 = 90."
+    },
+    {
+      question: "Multiply 7 × 14 mentally.",
+      options: ["98", "96", "100", "88"],
+      correctIndex: 0,
+      explanation: "7 × 14 = 98."
+    }
+  ]
+},
+{
+  question: "Divide 144 ÷ 12 mentally.",
+  options: ["12", "11", "10", "13"],
+  correctIndex: 0,
+  explanation: "144 ÷ 12 = 12.",
+  subQuestions: [
+    {
+      question: "Divide 81 ÷ 9 mentally.",
+      options: ["9", "8", "10", "7"],
+      correctIndex: 0,
+      explanation: "81 ÷ 9 = 9."
+    },
+    {
+      question: "Divide 56 ÷ 8 mentally.",
+      options: ["7", "6", "8", "9"],
+      correctIndex: 0,
+      explanation: "56 ÷ 8 = 7."
+    }
+  ]
+},
+{
+  question: "Double 48 mentally.",
+  options: ["96", "92", "98", "100"],
+  correctIndex: 0,
+  explanation: "48 × 2 = 96.",
+  subQuestions: [
+    {
+      question: "Double 37 mentally.",
+      options: ["74", "72", "70", "76"],
+      correctIndex: 0,
+      explanation: "37 × 2 = 74."
+    },
+    {
+      question: "Double 59 mentally.",
+      options: ["118", "120", "116", "114"],
+      correctIndex: 0,
+      explanation: "59 × 2 = 118."
+    }
+  ]
+},
+{
+  question: "Half of 84 mentally.",
+  options: ["42", "41", "40", "43"],
+  correctIndex: 0,
+  explanation: "84 ÷ 2 = 42.",
+  subQuestions: [
+    {
+      question: "Half of 66 mentally.",
+      options: ["33", "32", "34", "30"],
+      correctIndex: 0,
+      explanation: "66 ÷ 2 = 33."
+    },
+    {
+      question: "Half of 98 mentally.",
+      options: ["49", "48", "50", "47"],
+      correctIndex: 0,
+      explanation: "98 ÷ 2 = 49."
+    }
+  ]
+},
+{
+  question: "Subtract 68 - 29 mentally.",
+  options: ["39", "40", "38", "37"],
+  correctIndex: 0,
+  explanation: "68 - 29 = 39.",
+  subQuestions: [
+    {
+      question: "Subtract 53 - 27 mentally.",
+      options: ["26", "25", "27", "24"],
+      correctIndex: 0,
+      explanation: "53 - 27 = 26."
+    },
+    {
+      question: "Subtract 91 - 36 mentally.",
+      options: ["55", "56", "54", "57"],
+      correctIndex: 0,
+      explanation: "91 - 36 = 55."
+    }
+  ]
+},
+{
+  question: "Add 134 + 87 mentally.",
+  options: ["221", "220", "222", "223"],
+  correctIndex: 0,
+  explanation: "134 + 87 = 221.",
+  subQuestions: [
+    {
+      question: "Add 256 + 138 mentally.",
+      options: ["394", "392", "395", "396"],
+      correctIndex: 0,
+      explanation: "256 + 138 = 394."
+    },
+    {
+      question: "Add 479 + 321 mentally.",
+      options: ["800", "790", "810", "820"],
+      correctIndex: 0,
+      explanation: "479 + 321 = 800."
+    }
+  ]
+},
+{
+  question: "Multiply 25 × 16 mentally.",
+  options: ["400", "390", "410", "420"],
+  correctIndex: 0,
+  explanation: "25 × 16 = 400.",
+  subQuestions: [
+    {
+      question: "Multiply 18 × 14 mentally.",
+      options: ["252", "250", "260", "245"],
+      correctIndex: 0,
+      explanation: "18 × 14 = 252."
+    },
+    {
+      question: "Multiply 22 × 13 mentally.",
+      options: ["286", "280", "290", "284"],
+      correctIndex: 0,
+      explanation: "22 × 13 = 286."
+    }
+  ]
+},
+{
+  question: "Divide 360 ÷ 12 mentally.",
+  options: ["30", "28", "32", "29"],
+  correctIndex: 0,
+  explanation: "360 ÷ 12 = 30.",
+  subQuestions: [
+    {
+      question: "Divide 420 ÷ 14 mentally.",
+      options: ["30", "28", "32", "31"],
+      correctIndex: 0,
+      explanation: "420 ÷ 14 = 30."
+    },
+    {
+      question: "Divide 144 ÷ 16 mentally.",
+      options: ["9", "8", "10", "11"],
+      correctIndex: 0,
+      explanation: "144 ÷ 16 = 9."
+    }
+  ]
+},
+{
+  question: "Round 347 to the nearest ten.",
+  options: ["350", "340", "360", "345"],
+  correctIndex: 0,
+  explanation: "347 rounded to nearest ten is 350.",
+  subQuestions: [
+    {
+      question: "Round 582 to the nearest ten.",
+      options: ["580", "590", "600", "575"],
+      correctIndex: 0,
+      explanation: "582 rounded to nearest ten is 580."
+    },
+    {
+      question: "Round 619 to the nearest hundred.",
+      options: ["600", "620", "610", "700"],
+      correctIndex: 0,
+      explanation: "619 rounded to nearest hundred is 600."
+    }
+  ]
+},
+{
+  question: "Find 15% of 200 mentally.",
+  options: ["30", "25", "35", "40"],
+  correctIndex: 0,
+  explanation: "15% of 200 = 0.15 × 200 = 30.",
+  subQuestions: [
+    {
+      question: "Find 20% of 150 mentally.",
+      options: ["30", "25", "35", "40"],
+      correctIndex: 0,
+      explanation: "20% of 150 = 0.2 × 150 = 30."
+    },
+    {
+      question: "Find 10% of 80 mentally.",
+      options: ["8", "10", "12", "9"],
+      correctIndex: 1,
+      explanation: "10% of 80 = 8."
+    }
+  ]
+}
+// --- SNIPPET 2 END ---
+// <- keep a comma if you are going to add snippet 3
   {
     title: "Whole Numbers",
     summary: "Understanding properties and operations of whole numbers.",
