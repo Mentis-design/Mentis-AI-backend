@@ -82,8 +82,8 @@ tracker.innerText = `Progress: ${percent}%`;
   questionDiv.className = "card";
   questionDiv.innerHTML = `
     <h3>Question ${currentQuestionIndex + 1} ${
-    questionObj.subQuestions ? `(Sub ${currentSubQuestionIndex + 1})` : ""
-  }</h3>
+questionObj.subQuestions ? `(Sub ${Math.max(currentSubQuestionIndex,1)})` : ""
+}</h3>
     <p>${text}</p>
     <button id="showAnswer">Show Answer</button>
   `;
