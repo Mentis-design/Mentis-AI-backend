@@ -74,10 +74,15 @@ tracker.innerText = `Progress: ${percent}%`;
   // Current question
   const questionObj = currentLesson.questions[currentQuestionIndex];
   let text = questionObj.question;
-  if (questionObj.subQuestions && currentSubQuestionIndex > 0) {
-    text = questionObj.subQuestions[currentSubQuestionIndex - 1];
-  }
-
+  if (questionObj.subQuestions && currentSubQuestionIndex < questionObj.subQuestions.length) {
+  const nextBtn = document.createElement("button");
+  nextBtn.innerText = "Continue";
+  nextBtn.onclick = () => {
+    currentSubQuestionIndex++;
+    renderLessonView();
+  };
+  appDiv.appendChild(nextBtn);
+}
   const questionDiv = document.createElement("div");
   questionDiv.className = "card";
   questionDiv.innerHTML = `
