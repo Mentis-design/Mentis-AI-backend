@@ -1,4 +1,7 @@
-// static/lessons.js
+// --- GLOBAL FUNCTIONS ---
+window.toggleDark = function () {
+  document.body.classList.toggle("dark");
+};// static/lessons.js
 import { grade8MathLessons } from "./data/grade8MathLessons.js";
 
 const appDiv = document.querySelector(".app");
