@@ -56,15 +56,20 @@ function startLesson(index) {
 function renderLessonView() {
   appDiv.innerHTML = "";
 
-  // Progress tracker
-  const tracker = document.createElement("div");
-  tracker.style.marginBottom = "16px";
+// Progress tracker (fixed for sub-questions)
+const totalSteps = currentLesson.questions.reduce(
+  (sum, q) => sum + (q.subQuestions ? q.subQuestions.length : 1),
+  0
+);
 
-  const percent = Math.floor(
-    ((currentQuestionIndex + 1) / currentLesson.questions.length) * 100
-  );
-  tracker.innerText = `Progress: ${percent}%`;
-  appDiv.appendChild(tracker);
+const completedSteps =
+  currentLesson.questions
+    .slice(0, currentQuestionIndex)
+    .reduce((sum, q) => sum + (q.subQuestions ? q.subQuestions.length : 1), 0)
+  + currentSubQuestionIndex;
+
+const percent = Math.floor((completedSteps / totalSteps) * 100);
+tracker.innerText = `Progress: ${percent}%`;
 
   // Current question
   const questionObj = currentLesson.questions[currentQuestionIndex];
