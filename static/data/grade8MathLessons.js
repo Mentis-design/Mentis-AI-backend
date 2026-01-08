@@ -422,9 +422,213 @@ export const grade8MathLessons = [
       explanation: "10% of 80 = 8."
     }
   ]
+},
+{
+  title: "Mental Maths - Snippet 3",
+  summary: "10 main questions with 2 sub-questions each to strengthen your mental maths skills.",
+  questions: [
+    {
+      question: "Calculate 25 × 4 mentally.",
+      options: ["50", "75", "100", "90"],
+      correctIndex: 2,
+      explanation: "25 × 4 = 100",
+      subQuestions: [
+        {
+          question: "Multiply 25 × 8 mentally.",
+          options: ["200", "180", "150", "175"],
+          correctIndex: 0,
+          explanation: "25 × 8 = 200"
+        },
+        {
+          question: "Multiply 12 × 25 mentally.",
+          options: ["300", "250", "275", "320"],
+          correctIndex: 0,
+          explanation: "12 × 25 = 300"
+        }
+      ]
+    },
+    {
+      question: "What is 125 ÷ 5 mentally?",
+      options: ["20", "25", "30", "15"],
+      correctIndex: 1,
+      explanation: "125 ÷ 5 = 25",
+      subQuestions: [
+        {
+          question: "Calculate 225 ÷ 5 mentally.",
+          options: ["40", "45", "50", "55"],
+          correctIndex: 1,
+          explanation: "225 ÷ 5 = 45"
+        },
+        {
+          question: "Calculate 350 ÷ 7 mentally.",
+          options: ["45", "50", "55", "60"],
+          correctIndex: 3,
+          explanation: "350 ÷ 7 = 50"
+        }
+      ]
+    },
+    {
+      question: "Add 76 + 45 mentally.",
+      options: ["111", "121", "131", "141"],
+      correctIndex: 2,
+      explanation: "76 + 45 = 121",
+      subQuestions: [
+        {
+          question: "Add 89 + 56 mentally.",
+          options: ["135", "145", "155", "125"],
+          correctIndex: 1,
+          explanation: "89 + 56 = 145"
+        },
+        {
+          question: "Add 123 + 78 mentally.",
+          options: ["201", "211", "221", "231"],
+          correctIndex: 1,
+          explanation: "123 + 78 = 201"
+        }
+      ]
+    },
+    {
+      question: "Subtract 95 − 47 mentally.",
+      options: ["38", "48", "58", "68"],
+      correctIndex: 0,
+      explanation: "95 − 47 = 48",
+      subQuestions: [
+        {
+          question: "Subtract 123 − 78 mentally.",
+          options: ["45", "55", "35", "50"],
+          correctIndex: 0,
+          explanation: "123 − 78 = 45"
+        },
+        {
+          question: "Subtract 200 − 135 mentally.",
+          options: ["55", "65", "75", "60"],
+          correctIndex: 2,
+          explanation: "200 − 135 = 65"
+        }
+      ]
+    },
+    {
+      question: "Double 36 mentally.",
+      options: ["62", "68", "72", "74"],
+      correctIndex: 2,
+      explanation: "36 × 2 = 72",
+      subQuestions: [
+        {
+          question: "Double 49 mentally.",
+          options: ["88", "98", "90", "92"],
+          correctIndex: 1,
+          explanation: "49 × 2 = 98"
+        },
+        {
+          question: "Double 57 mentally.",
+          options: ["104", "112", "114", "110"],
+          correctIndex: 2,
+          explanation: "57 × 2 = 114"
+        }
+      ]
+    },
+    {
+      question: "Half of 144 mentally.",
+      options: ["60", "66", "70", "72"],
+      correctIndex: 3,
+      explanation: "144 ÷ 2 = 72",
+      subQuestions: [
+        {
+          question: "Half of 98 mentally.",
+          options: ["44", "49", "50", "52"],
+          correctIndex: 1,
+          explanation: "98 ÷ 2 = 49"
+        },
+        {
+          question: "Half of 200 mentally.",
+          options: ["90", "95", "100", "105"],
+          correctIndex: 2,
+          explanation: "200 ÷ 2 = 100"
+        }
+      ]
+    },
+    {
+      question: "Multiply 15 × 12 mentally.",
+      options: ["160", "170", "180", "190"],
+      correctIndex: 2,
+      explanation: "15 × 12 = 180",
+      subQuestions: [
+        {
+          question: "Multiply 14 × 13 mentally.",
+          options: ["182", "192", "172", "186"],
+          correctIndex: 0,
+          explanation: "14 × 13 = 182"
+        },
+        {
+          question: "Multiply 16 × 15 mentally.",
+          options: ["220", "230", "240", "250"],
+          correctIndex: 2,
+          explanation: "16 × 15 = 240"
+        }
+      ]
+    },
+    {
+      question: "Find 10% of 250 mentally.",
+      options: ["20", "25", "30", "35"],
+      correctIndex: 1,
+      explanation: "10% of 250 = 25",
+      subQuestions: [
+        {
+          question: "Find 5% of 200 mentally.",
+          options: ["5", "10", "15", "20"],
+          correctIndex: 3,
+          explanation: "5% of 200 = 10"
+        },
+        {
+          question: "Find 25% of 120 mentally.",
+          options: ["25", "30", "35", "40"],
+          correctIndex: 3,
+          explanation: "25% of 120 = 30"
+        }
+      ]
+    },
+    {
+      question: "Add 123 + 234 mentally.",
+      options: ["347", "357", "367", "377"],
+      correctIndex: 1,
+      explanation: "123 + 234 = 357",
+      subQuestions: [
+        {
+          question: "Add 56 + 78 mentally.",
+          options: ["124", "134", "144", "136"],
+          correctIndex: 1,
+          explanation: "56 + 78 = 134"
+        },
+        {
+          question: "Add 89 + 67 mentally.",
+          options: ["145", "155", "156", "157"],
+          correctIndex: 2,
+          explanation: "89 + 67 = 156"
+        }
+      ]
+    },
+    {
+      question: "Subtract 500 − 275 mentally.",
+      options: ["215", "225", "235", "245"],
+      correctIndex: 1,
+      explanation: "500 − 275 = 225",
+      subQuestions: [
+        {
+          question: "Subtract 375 − 128 mentally.",
+          options: ["247", "248", "249", "250"],
+          correctIndex: 2,
+          explanation: "375 − 128 = 247"
+        },
+        {
+          question: "Subtract 600 − 345 mentally.",
+          options: ["245", "255", "265", "275"],
+          correctIndex: 1,
+          explanation: "600 − 345 = 255"
+        }
+      ]
+    }
+  ]
 }
-// --- SNIPPET 2 END ---
-// <- keep a comma if you are going to add snippet 3
   {
     title: "Whole Numbers",
     summary: "Understanding properties and operations of whole numbers.",
