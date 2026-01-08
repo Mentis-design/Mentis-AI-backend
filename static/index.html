@@ -104,27 +104,7 @@ button {
 
 </div>
 
-<script>
-let current = 1
-let progress = 30
-
-function startLesson() {
-  document.getElementById("learn-screen").classList.add("hidden")
-  document.getElementById("lesson-screen").classList.remove("hidden")
-}
-
-function submit() {
-  // placeholder feedback
-}
-
-function nextQuestion() {
-  current++
-  progress += 5
-
-  document.getElementById("q-num").innerText = current
-  document.getElementById("learn-progress").style.width = progress + "%"
-}
-</script>
+<script type="module" src="/static/lessons.js"></script>
 
 </body>
   </html>
