@@ -628,7 +628,212 @@ export const grade8MathLessons = [
       ]
     }
   ]
-}
+},{
+  title: "Mental Maths - Snippet 4",
+  summary: "Remaining 10 main questions with 2 sub-questions each for mental maths practice.",
+  questions: [
+    {
+      question: "Multiply 18 × 6 mentally.",
+      options: ["98", "108", "110", "116"],
+      correctIndex: 1,
+      explanation: "18 × 6 = 108",
+      subQuestions: [
+        {
+          question: "Multiply 17 × 7 mentally.",
+          options: ["119", "121", "115", "123"],
+          correctIndex: 0,
+          explanation: "17 × 7 = 119"
+        },
+        {
+          question: "Multiply 16 × 8 mentally.",
+          options: ["120", "128", "124", "126"],
+          correctIndex: 1,
+          explanation: "16 × 8 = 128"
+        }
+      ]
+    },
+    {
+      question: "Divide 144 ÷ 12 mentally.",
+      options: ["10", "11", "12", "13"],
+      correctIndex: 2,
+      explanation: "144 ÷ 12 = 12",
+      subQuestions: [
+        {
+          question: "Divide 180 ÷ 15 mentally.",
+          options: ["10", "12", "14", "16"],
+          correctIndex: 1,
+          explanation: "180 ÷ 15 = 12"
+        },
+        {
+          question: "Divide 225 ÷ 25 mentally.",
+          options: ["8", "9", "10", "11"],
+          correctIndex: 2,
+          explanation: "225 ÷ 25 = 9"
+        }
+      ]
+    },
+    {
+      question: "Add 234 + 567 mentally.",
+      options: ["791", "801", "811", "821"],
+      correctIndex: 2,
+      explanation: "234 + 567 = 801",
+      subQuestions: [
+        {
+          question: "Add 345 + 456 mentally.",
+          options: ["791", "801", "811", "821"],
+          correctIndex: 1,
+          explanation: "345 + 456 = 801"
+        },
+        {
+          question: "Add 123 + 789 mentally.",
+          options: ["902", "912", "922", "932"],
+          correctIndex: 1,
+          explanation: "123 + 789 = 912"
+        }
+      ]
+    },
+    {
+      question: "Subtract 678 − 345 mentally.",
+      options: ["323", "333", "343", "353"],
+      correctIndex: 1,
+      explanation: "678 − 345 = 333",
+      subQuestions: [
+        {
+          question: "Subtract 890 − 456 mentally.",
+          options: ["424", "434", "444", "454"],
+          correctIndex: 1,
+          explanation: "890 − 456 = 434"
+        },
+        {
+          question: "Subtract 765 − 289 mentally.",
+          options: ["466", "476", "486", "496"],
+          correctIndex: 0,
+          explanation: "765 − 289 = 476"
+        }
+      ]
+    },
+    {
+      question: "Multiply 24 × 11 mentally.",
+      options: ["254", "264", "274", "284"],
+      correctIndex: 1,
+      explanation: "24 × 11 = 264",
+      subQuestions: [
+        {
+          question: "Multiply 23 × 12 mentally.",
+          options: ["266", "276", "286", "296"],
+          correctIndex: 1,
+          explanation: "23 × 12 = 276"
+        },
+        {
+          question: "Multiply 21 × 13 mentally.",
+          options: ["273", "283", "293", "303"],
+          correctIndex: 0,
+          explanation: "21 × 13 = 273"
+        }
+      ]
+    },
+    {
+      question: "Find 15% of 200 mentally.",
+      options: ["25", "30", "35", "40"],
+      correctIndex: 2,
+      explanation: "15% of 200 = 30",
+      subQuestions: [
+        {
+          question: "Find 20% of 150 mentally.",
+          options: ["25", "30", "35", "40"],
+          correctIndex: 3,
+          explanation: "20% of 150 = 30"
+        },
+        {
+          question: "Find 5% of 80 mentally.",
+          options: ["3", "4", "5", "6"],
+          correctIndex: 1,
+          explanation: "5% of 80 = 4"
+        }
+      ]
+    },
+    {
+      question: "Double 65 mentally.",
+      options: ["120", "125", "130", "135"],
+      correctIndex: 2,
+      explanation: "65 × 2 = 130",
+      subQuestions: [
+        {
+          question: "Double 78 mentally.",
+          options: ["150", "155", "156", "160"],
+          correctIndex: 2,
+          explanation: "78 × 2 = 156"
+        },
+        {
+          question: "Double 49 mentally.",
+          options: ["96", "98", "100", "102"],
+          correctIndex: 1,
+          explanation: "49 × 2 = 98"
+        }
+      ]
+    },
+    {
+      question: "Half of 90 mentally.",
+      options: ["40", "45", "50", "55"],
+      correctIndex: 1,
+      explanation: "90 ÷ 2 = 45",
+      subQuestions: [
+        {
+          question: "Half of 110 mentally.",
+          options: ["50", "55", "60", "65"],
+          correctIndex: 1,
+          explanation: "110 ÷ 2 = 55"
+        },
+        {
+          question: "Half of 84 mentally.",
+          options: ["40", "41", "42", "43"],
+          correctIndex: 2,
+          explanation: "84 ÷ 2 = 42"
+        }
+      ]
+    },
+    {
+      question: "Multiply 9 × 16 mentally.",
+      options: ["134", "144", "154", "164"],
+      correctIndex: 1,
+      explanation: "9 × 16 = 144",
+      subQuestions: [
+        {
+          question: "Multiply 8 × 17 mentally.",
+          options: ["136", "138", "144", "146"],
+          correctIndex: 0,
+          explanation: "8 × 17 = 136"
+        },
+        {
+          question: "Multiply 7 × 18 mentally.",
+          options: ["122", "124", "126", "128"],
+          correctIndex: 2,
+          explanation: "7 × 18 = 126"
+        }
+      ]
+    },
+    {
+      question: "Add 456 + 123 mentally.",
+      options: ["579", "569", "587", "577"],
+      correctIndex: 0,
+      explanation: "456 + 123 = 579",
+      subQuestions: [
+        {
+          question: "Add 234 + 567 mentally.",
+          options: ["790", "800", "801", "810"],
+          correctIndex: 2,
+          explanation: "234 + 567 = 801"
+        },
+        {
+          question: "Add 345 + 432 mentally.",
+          options: ["777", "767", "787", "757"],
+          correctIndex: 0,
+          explanation: "345 + 432 = 777"
+        }
+      ]
+    }
+  ]
+        }
   {
     title: "Whole Numbers",
     summary: "Understanding properties and operations of whole numbers.",
