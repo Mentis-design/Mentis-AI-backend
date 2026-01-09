@@ -11,4 +11,6 @@ if (!app) {
   `;
                                    }
 // --- INIT ---
-renderLessons();
+window.addEventListener("DOMContentLoaded", () => {
+  renderLessons();
+});
