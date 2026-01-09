@@ -1,21 +1,12 @@
-import { grade8MathLessons } from "./data/grade8MathLessons.js";
+console.log("LESSONS.JS LOADED");
 
-const appDiv = document.querySelector(".app");
+const app = document.querySelector(".app");
 
-function renderLessons() {
-  appDiv.innerHTML = `
-    <h1>Mentis 🧠 – Grade 8 Maths</h1>
+if (!app) {
+  console.error("❌ .app NOT FOUND");
+} else {
+  app.innerHTML = `
+    <h1 style="color:white">Mentis JS is running ✅</h1>
+    <p style="color:white">Lessons.js loaded correctly.</p>
   `;
-
-  grade8MathLessons.forEach((lesson) => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-      <h3>${lesson.title}</h3>
-      <p>${lesson.summary}</p>
-    `;
-    appDiv.appendChild(card);
-  });
-}
-
-renderLessons();
+                                   }
