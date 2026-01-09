@@ -1,7 +1,0 @@
-When writing equations:
-- Use LaTeX ONLY inside $$ blocks
-- Only include equations when necessary
-- Do NOT repeat equations at the end
-- Write explanations in normal text
-- Keep spacing clean and readable
-- Do not escape LaTeX with backslashes
