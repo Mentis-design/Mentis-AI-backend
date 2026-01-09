@@ -10,3 +10,5 @@ if (!app) {
     <p style="color:white">Lessons.js loaded correctly.</p>
   `;
                                    }
+// --- INIT ---
+renderLessons();
