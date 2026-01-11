@@ -331,6 +331,122 @@
     text-align: center;
     margin-bottom: 20px;
   }
+  /* ---------------- OPTIONS (MCQ BUTTONS) ---------------- */
+.option {
+  background: #334155;
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border: 2px solid transparent;
+}
+
+.option:hover {
+  transform: scale(1.02);
+  background: #475569;
+}
+
+.option.correct {
+  background: #22c55e !important;
+  color: #022c22;
+}
+
+.option.wrong {
+  background: #ef4444 !important;
+  color: #450a0a;
+}
+
+/* ---------------- PROGRESS BAR ---------------- */
+.progress {
+  width: 100%;
+  height: 10px;
+  background: #334155;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.4s ease;
+}
+
+/* ---------------- TIMER ---------------- */
+#timer {
+  background: #1e293b;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-left: 12px;
+}
+
+/* ---------------- MODE BUTTONS ---------------- */
+.mode-btn {
+  padding: 12px;
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+}
+
+/* ---------------- QUESTION TRANSITION ---------------- */
+.card {
+  animation: fadeSlide 0.35s ease;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------------- FLASH CORRECT ANSWER (TIMED MODE) ---------------- */
+.flash-answer {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #22c55e;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 999;
+  animation: flash 0.6s ease forwards;
+}
+
+@keyframes flash {
+  0% { opacity: 0 }
+  30% { opacity: 1 }
+  100% { opacity: 0 }
+}
+
+/* ---------------- XP FLOAT EFFECT ---------------- */
+.xp-float {
+  position: absolute;
+  right: 16px;
+  top: 12px;
+  color: #22c55e;
+  font-weight: 700;
+  animation: xpUp 1s ease forwards;
+}
+
+@keyframes xpUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  }
   </style>
 </head>
 <body>
