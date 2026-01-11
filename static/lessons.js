@@ -1,165 +1,124 @@
-// static/lessons.js
 import { grade8MathLessons } from "./data/grade8MathLessons.js";
-
-console.log("LESSONS.JS LOADED");
 
 const app = document.querySelector(".app");
 
-if (!app) {
-  console.error("❌ .app NOT FOUND");
-}
-
-/* ---------------- STATE ---------------- */
-
 let currentLesson = null;
-let currentQuestionIndex = 0;
-let currentSubQuestionIndex = 0;
+let questionIndex = 0;
+let locked = false;
 
-/* ---------------- UTILS ---------------- */
-
-const compliments = [
-  "Great job! 🎉",
-  "Nice work! 👏",
-  "Fantastic! 🔥",
-  "Amazing — that was a hard one! 💪",
-  "Well done! ✅"
-];
-
-function randomCompliment() {
-  return compliments[Math.floor(Math.random() * compliments.length)];
-}
-
-/* ---------------- RENDER LESSON LIST ---------------- */
-
-function createCard(lesson, index) {
-  const card = document.createElement("div");
-  card.className = "card";
-
-  card.innerHTML = `
-    <h3>${lesson.title}</h3>
-    <p>${lesson.summary}</p>
-    <button>Start Lesson</button>
-  `;
-
-  card.querySelector("button").onclick = () => startLesson(index);
-  return card;
-}
-
+/* ---------- RENDER LESSON LIST ---------- */
 function renderLessons() {
   app.innerHTML = `
-    <header>
-      <h1>Mentis 🧠 - Grade 8 Maths</h1>
-    </header>
+    <h1>Mentis 🧠 - Grade 8 Maths</h1>
   `;
 
   grade8MathLessons.forEach((lesson, index) => {
-    app.appendChild(createCard(lesson, index));
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      <h3>${lesson.title}</h3>
+      <p>${lesson.summary}</p>
+      <button>Start Lesson</button>
+    `;
+
+    card.querySelector("button").onclick = () => startLesson(index);
+    app.appendChild(card);
   });
 }
 
-/* ---------------- START LESSON ---------------- */
-
+/* ---------- START LESSON ---------- */
 function startLesson(index) {
   currentLesson = grade8MathLessons[index];
-  currentQuestionIndex = 0;
-  currentSubQuestionIndex = 0;
-  renderQuestion();
+  questionIndex = 0;
+  showQuestion();
 }
 
-/* ---------------- QUESTION FLOW ---------------- */
-
-function getCurrentQuestion() {
-  const q = currentLesson.questions[currentQuestionIndex];
-  if (q.subQuestions && q.subQuestions.length > 0) {
-    return q.subQuestions[currentSubQuestionIndex];
-  }
-  return q;
-}
-
-function renderQuestion() {
-  const question = getCurrentQuestion();
+/* ---------- SHOW QUESTION ---------- */
+function showQuestion() {
+  locked = false;
+  const q = currentLesson.questions[questionIndex];
+  const total = currentLesson.questions.length;
+  const progressPercent = ((questionIndex + 1) / total) * 100;
 
   app.innerHTML = `
-    <div class="card">
-      <p>Question ${currentQuestionIndex + 1}
-        ${currentLesson.questions[currentQuestionIndex].subQuestions
-          ? `.${currentSubQuestionIndex + 1}`
-          : ""}
-      </p>
+    <div class="card fade">
+      <p><strong>Question ${questionIndex + 1} of ${total}</strong></p>
 
-      <h3>${question.question}</h3>
+      <div class="progress">
+        <div class="progress-fill" style="width:${progressPercent}%"></div>
+      </div>
+
+      <h3>${q.question}</h3>
 
       <div id="options"></div>
       <div id="feedback"></div>
+
+      <button id="next-btn" style="display:none;">Next</button>
     </div>
   `;
 
   const optionsDiv = document.getElementById("options");
-  const feedbackDiv = document.getElementById("feedback");
+  const feedback = document.getElementById("feedback");
+  const nextBtn = document.getElementById("next-btn");
 
-  question.options.forEach((opt, i) => {
-    const btn = document.createElement("div");
-    btn.className = "option";
-    btn.textContent = opt;
+  q.options.forEach((opt, i) => {
+    const div = document.createElement("div");
+    div.className = "option";
+    div.textContent = opt;
 
-    btn.onclick = () => {
-      if (i === question.correctIndex) {
-        feedbackDiv.innerHTML = `
-          <p style="color:#4ade80">${randomCompliment()}</p>
-        `;
-        setTimeout(nextStep, 800);
+    div.onclick = () => {
+      if (locked) return;
+      locked = true;
+
+      if (i === q.correctIndex) {
+        div.classList.add("correct");
+        feedback.textContent =
+          q.correctMessage || randomCompliment();
       } else {
-        feedbackDiv.innerHTML = `
-          <p style="color:#f87171">
-            ❌ ${question.explanation}
-          </p>
-        `;
+        div.classList.add("wrong");
+        feedback.textContent = q.explanation;
+        optionsDiv.children[q.correctIndex].classList.add("correct");
       }
+
+      nextBtn.style.display = "block";
     };
 
-    optionsDiv.appendChild(btn);
+    optionsDiv.appendChild(div);
   });
+
+  nextBtn.onclick = () => {
+    questionIndex++;
+    if (questionIndex < total) {
+      showQuestion();
+    } else {
+      showFinish();
+    }
+  };
 }
 
-/* ---------------- NEXT STEP ---------------- */
-
-function nextStep() {
-  const mainQ = currentLesson.questions[currentQuestionIndex];
-
-  if (mainQ.subQuestions && currentSubQuestionIndex < mainQ.subQuestions.length - 1) {
-    currentSubQuestionIndex++;
-    renderQuestion();
-    return;
-  }
-
-  // Move to next main question
-  currentSubQuestionIndex = 0;
-  currentQuestionIndex++;
-
-  if (currentQuestionIndex < currentLesson.questions.length) {
-    renderQuestion();
-  } else {
-    renderLessonComplete();
-  }
-}
-
-/* ---------------- COMPLETE ---------------- */
-
-function renderLessonComplete() {
+/* ---------- FINISH ---------- */
+function showFinish() {
   app.innerHTML = `
-    <div class="card">
-      <h2>Lesson Complete 🎉</h2>
-      <p>You finished <strong>${currentLesson.title}</strong></p>
-      <button id="back">Back to Lessons</button>
+    <div class="card fade">
+      <h2>🎉 Lesson Complete!</h2>
+      <p>Great work — keep going!</p>
+      <button onclick="location.reload()">Back to Lessons</button>
     </div>
   `;
-
-  document.getElementById("back").onclick = renderLessons;
 }
 
-/* ---------------- INIT ---------------- */
+/* ---------- COMPLIMENTS ---------- */
+function randomCompliment() {
+  const compliments = [
+    "Great job! 🎉",
+    "Amazing work!",
+    "Fantastic!",
+    "Nice one!",
+    "That was a tough one — well done 💪"
+  ];
+  return compliments[Math.floor(Math.random() * compliments.length)];
+}
 
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("Lessons found:", grade8MathLessons.length);
-  renderLessons();
-});
+/* ---------- INIT ---------- */
+document.addEventListener("DOMContentLoaded", renderLessons);
