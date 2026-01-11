@@ -446,6 +446,43 @@
     opacity: 0;
     transform: translateY(-16px);
   }
+  .mode-btn {
+  margin-top: 10px;
+  padding: 10px;
+  font-size: 0.95rem;
+}
+
+.option {
+  background: #334155;
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.option.correct {
+  background: #16a34a;
+}
+
+.option.wrong {
+  background: #dc2626;
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.flash {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+  font-weight: bold;
+  background: rgba(0,0,0,0.6);
+  z-index: 999;
   }
   </style>
 </head>
