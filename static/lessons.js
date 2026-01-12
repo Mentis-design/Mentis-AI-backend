@@ -198,7 +198,7 @@ function showCompletion() {
     <div class="card">
       <h2>🎉 Lesson Complete</h2>
       <p>Score: ${percent}%</p>
-      <p>XP Earned: ${xp}</p>
+      <p>XP Earned: ${xp || 0}</p>
       <button onclick="renderLessons()">Back to Lessons</button>
     </div>
   `;
