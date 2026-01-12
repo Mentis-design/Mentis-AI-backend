@@ -155,9 +155,10 @@ function submitAnswer(index, element) {
     showFeedback(q.explanation);
   }
 
+  setTimeout(() => {
   if (currentMode === "timed") {
-    setTimeout(nextQuestion, 900);
-  }
+    nextQuestion();
+900);
 }
 
 /* ================= FEEDBACK ================= */
