@@ -158,8 +158,8 @@ function submitAnswer(index, element) {
   setTimeout(() => {
   if (currentMode === "timed") {
     nextQuestion();
-900);
-}
+  }
+}, 900);
 
 /* ================= FEEDBACK ================= */
 
