@@ -144,7 +144,7 @@ function submitAnswer(index, element) {
   if (correct) {
     element.classList.add("correct");
     score++;
-    xp += currentLesson.xpPerQuestion;
+    xp += Number(currentLesson.xpPerQuestion || 0);
 
     showFlash("✔ " + q.options[q.correctIndex], "green");
   } else {
