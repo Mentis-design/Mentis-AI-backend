@@ -97,6 +97,7 @@ function clearTimers() {
 
 function renderQuestion() {
   locked = false;
+
   const q = currentLesson.questions[currentQuestionIndex];
   const progress = Math.round(
     ((currentQuestionIndex + 1) / currentLesson.questions.length) * 100
@@ -120,6 +121,7 @@ function renderQuestion() {
   `;
 
   const optionsDiv = document.getElementById("options");
+
   q.options.forEach((opt, i) => {
     const btn = document.createElement("div");
     btn.className = "option";
