@@ -160,7 +160,7 @@ function submitAnswer(index, element) {
     nextQuestion();
   }
 }, 900);
-
+}
 /* ================= FEEDBACK ================= */
 
 function showFeedback(text) {
