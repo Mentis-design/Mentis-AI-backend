@@ -153,10 +153,8 @@ function submitAnswer(index, element) {
   }
 
   setTimeout(() => {
-  if (currentMode === "timed") {
-    nextQuestion();
-  }
-}, 900);
+  nextQuestion();
+}, currentMode === "timed" ? 900 : 600);
 }
 /* ================= FEEDBACK ================= */
 
