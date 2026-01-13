@@ -116,7 +116,6 @@ function renderQuestion() {
       <h3>${q.question}</h3>
       <div id="options"></div>
       <div id="feedback"></div>
-      ${currentMode === "normal" ? `<button onclick="nextQuestion()">Next</button>` : ""}
     </div>
   `;
 
