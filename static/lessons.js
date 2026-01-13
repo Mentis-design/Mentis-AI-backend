@@ -146,12 +146,9 @@ function submitAnswer(index, element) {
     score++;
     xp += Number(currentLesson.xpPerQuestion || 0);
 
-    showFlash("✔ " + q.options[q.correctIndex], "green");
   } else {
     element.classList.add("wrong");
     document.querySelectorAll(".option")[q.correctIndex].classList.add("correct");
-
-    showFlash("✖ " + q.options[q.correctIndex], "red");
     showFeedback(q.explanation);
   }
 
