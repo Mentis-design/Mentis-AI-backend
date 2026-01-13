@@ -140,23 +140,26 @@ function submitAnswer(index, element) {
   const q = currentLesson.questions[currentQuestionIndex];
   const correct = index === q.correctIndex;
 
-  document.querySelectorAll(".option").forEach(o => o.style.pointerEvents = "none");
+  document
+    .querySelectorAll(".option")
+    .forEach(o => (o.style.pointerEvents = "none"));
 
   if (correct) {
     element.classList.add("correct");
     score++;
     xp += Number(currentLesson.xpPerQuestion || 0);
-
   } else {
     element.classList.add("wrong");
-    document.querySelectorAll(".option")[q.correctIndex].classList.add("correct");
+    document
+      .querySelectorAll(".option")
+      [q.correctIndex].classList.add("correct");
     showFeedback(q.explanation);
   }
 
   setTimeout(() => {
-  nextQuestion();
-}, currentMode === "timed" ? 900 : 600);
-}
+    nextQuestion();
+  }, currentMode === "timed" ? 900 : 600);
+  }
 /* ================= FEEDBACK ================= */
 
 function showFeedback(text) {
